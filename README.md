@@ -1,6 +1,6 @@
 # IllumiCraft: Unified Geometry and Illumination Diffusion for Controllable Video Generation  <br />
 
-Official implementation of "Olympus: A Universal Task Router for Computer Vision Tasks" 
+Official implementation of "IllumiCraft: Unified Geometry and Illumination Diffusion for Controllable Video Generation" 
 
 [Yuanze Lin](https://yuanze-lin.me/), [Yi-Wen Chen](https://wenz116.github.io/), [Yi-Hsuan Tsai](https://sites.google.com/site/yihsuantsai/), [Ronald Clark](https://www.ron-clark.com/), [João F. Henriques](https://www.robots.ox.ac.uk/~joao/). [Ming-Hsuan Yang](https://faculty.ucmerced.edu/mhyang/)
 
