@@ -15,17 +15,37 @@ Official implementation of "Olympus: A Universal Task Router for Computer Vision
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets/framework.png)
 
 ## :snowboarder: Results
-<img width="800" alt="image" src="https://github.com/user-attachments/assets/45fcec9b-ec34-40a5-8809-e261c79e48a1"/>
+<img width="650" alt="image" src="https://github.com/user-attachments/assets/45fcec9b-ec34-40a5-8809-e261c79e48a1"/>
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/1.gif)
 
 
-<img width="565" alt="image" src="https://github.com/user-attachments/assets/372d8fec-db53-4c35-b668-76055472e96b" />
+<img width="650" alt="image" src="https://github.com/user-attachments/assets/372d8fec-db53-4c35-b668-76055472e96b"/>
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/2.gif)
 
+
+<img width="650" alt="image" src="https://github.com/user-attachments/assets/b05ec04c-6c23-49c3-bee1-cb1d2bfe458d"/>
+
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/3.gif)
+
+
+<img width="650" alt="image" src="https://github.com/user-attachments/assets/4c2da838-b1b5-40b4-84ed-6fc3917a826e"/>
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/4.gif)
 
+
+<img width="650" alt="image" src="https://github.com/user-attachments/assets/d2ee258f-224c-46dc-affa-290bc7ba6c2e"/>
+
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/5.gif)
+
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/6.gif)
+
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/7.gif)
+
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/8.gif)
+
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/9.gif)
+
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/10.gif)
+
