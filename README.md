@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/29e03181-e389-4a77-b247-26d896f300e1)# IllumiCraft: Unified Geometry and Illumination Diffusion for Controllable Video Generation  <br />
+# IllumiCraft: Unified Geometry and Illumination Diffusion for Controllable Video Generation  <br />
 
 Official implementation of "Olympus: A Universal Task Router for Computer Vision Tasks" 
 
@@ -15,13 +15,17 @@ Official implementation of "Olympus: A Universal Task Router for Computer Vision
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets/framework.png)
 
 ## :snowboarder: Results
-“A young black woman, …, cool white beam, dramatic noir-style atmosphere”
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/45fcec9b-ec34-40a5-8809-e261c79e48a1"/>
+
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/1.gif)
 
-“A woman with short dark hair, …, focused pure white beam, inky black void”
+
+<img width="565" alt="image" src="https://github.com/user-attachments/assets/372d8fec-db53-4c35-b668-76055472e96b" />
+
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/2.gif)
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/3.gif)
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/4.gif)
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/5.gif)
 
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/4.gif)
+
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/5.gif)
