@@ -12,7 +12,7 @@ Official implementation of "Olympus: A Universal Task Router for Computer Vision
   
 ## :low_brightness: Overview 
 
-![image](https://github.com/yuanze-lin/IllumiCraft/tree/main/assets/framework.png)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/asset/framework.png)
 
 ## :snowboarder: Results
 
