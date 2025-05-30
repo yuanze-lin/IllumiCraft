@@ -15,43 +15,34 @@ Official implementation of "Olympus: A Universal Task Router for Computer Vision
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets/framework.png)
 
 ## :snowboarder: Results
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/5cae4fd3-c257-4774-936b-a6706b3e7f9e" />
+<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/5cae4fd3-c257-4774-936b-a6706b3e7f9e" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/14.gif)
-
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/45fcec9b-ec34-40a5-8809-e261c79e48a1"/>
+<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/45fcec9b-ec34-40a5-8809-e261c79e48a1"/>
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/1.gif)
-
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/372d8fec-db53-4c35-b668-76055472e96b"/>
+<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/372d8fec-db53-4c35-b668-76055472e96b"/>
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/2.gif)
-
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/b05ec04c-6c23-49c3-bee1-cb1d2bfe458d"/>
+<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/b05ec04c-6c23-49c3-bee1-cb1d2bfe458d"/>
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/3.gif)
-
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/4c2da838-b1b5-40b4-84ed-6fc3917a826e"/>
+<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/4c2da838-b1b5-40b4-84ed-6fc3917a826e"/>
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/4.gif)
-
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/d2ee258f-224c-46dc-affa-290bc7ba6c2e"/>
+<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/d2ee258f-224c-46dc-affa-290bc7ba6c2e"/>
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/5.gif)
-
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/8c145d55-2b70-4582-8620-52bdfcec3c60" />
+<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/8c145d55-2b70-4582-8620-52bdfcec3c60" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/7.gif)
-
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/96c9fa52-2ed6-4658-99d7-13f8d55b040b" />
+<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/96c9fa52-2ed6-4658-99d7-13f8d55b040b" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/8.gif)
-
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/0d9e9040-0fa1-4412-a21b-7de593c7cf60" />
+<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/0d9e9040-0fa1-4412-a21b-7de593c7cf60" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/10.gif)
-
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/6500634d-e8a6-40d2-a090-38f40b014546" />
+<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/6500634d-e8a6-40d2-a090-38f40b014546" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/11.gif)
 
