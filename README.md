@@ -39,11 +39,21 @@ Official implementation of "Olympus: A Universal Task Router for Computer Vision
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/5.gif)
 
+
+
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/6.gif)
+
+<img width="554" alt="image" src="https://github.com/user-attachments/assets/8c145d55-2b70-4582-8620-52bdfcec3c60" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/7.gif)
 
+
+<img width="535" alt="image" src="https://github.com/user-attachments/assets/96c9fa52-2ed6-4658-99d7-13f8d55b040b" />
+
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/8.gif)
+
+
+<img width="251" alt="image" src="https://github.com/user-attachments/assets/3e23ac7a-6247-4d73-a7f4-3ab48eac91dc" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/9.gif)
 
