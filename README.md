@@ -40,9 +40,6 @@ Official implementation of "Olympus: A Universal Task Router for Computer Vision
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/5.gif)
 
 
-
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/6.gif)
-
 <img width="554" alt="image" src="https://github.com/user-attachments/assets/8c145d55-2b70-4582-8620-52bdfcec3c60" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/7.gif)
@@ -57,5 +54,9 @@ Official implementation of "Olympus: A Universal Task Router for Computer Vision
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/9.gif)
 
+<img width="533" alt="image" src="https://github.com/user-attachments/assets/0d9e9040-0fa1-4412-a21b-7de593c7cf60" />
+
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/10.gif)
+
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/11.gif)
 
