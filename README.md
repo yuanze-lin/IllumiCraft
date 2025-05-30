@@ -15,7 +15,7 @@ Official implementation of "Olympus: A Universal Task Router for Computer Vision
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets/framework.png)
 
 ## :snowboarder: Results
-<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/5cae4fd3-c257-4774-936b-a6706b3e7f9e" />
+<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/aeb594c5-c32b-4ffa-bcda-0723e7612187" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/14.gif)
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/45fcec9b-ec34-40a5-8809-e261c79e48a1"/>
@@ -24,13 +24,13 @@ Official implementation of "Olympus: A Universal Task Router for Computer Vision
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/372d8fec-db53-4c35-b668-76055472e96b"/>
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/2.gif)
-<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/b05ec04c-6c23-49c3-bee1-cb1d2bfe458d"/>
+<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/28f80790-2bb5-438a-a5d3-8468af8665d5" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/3.gif)
-<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/4c2da838-b1b5-40b4-84ed-6fc3917a826e"/>
+<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/8dfc7346-b322-48f5-82b3-fafaad513edd" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/4.gif)
-<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/d2ee258f-224c-46dc-affa-290bc7ba6c2e"/>
+<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/a8e9f972-9b6d-4423-a90d-c7a88687d2dd" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/5.gif)
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/8c145d55-2b70-4582-8620-52bdfcec3c60" />
