@@ -1,4 +1,4 @@
-# IllumiCraft: Unified Geometry and Illumination Diffusion for Controllable Video Generation  <br />
+![image](https://github.com/user-attachments/assets/29e03181-e389-4a77-b247-26d896f300e1)# IllumiCraft: Unified Geometry and Illumination Diffusion for Controllable Video Generation  <br />
 
 Official implementation of "Olympus: A Universal Task Router for Computer Vision Tasks" 
 
@@ -15,7 +15,7 @@ Official implementation of "Olympus: A Universal Task Router for Computer Vision
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets/framework.png)
 
 ## :snowboarder: Results
-
+“A young black woman, …, cool white beam, dramatic noir-style atmosphere”
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/1.gif)
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/2.gif)
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/3.gif)
