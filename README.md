@@ -16,6 +16,7 @@ Official implementation of "Olympus: A Universal Task Router for Computer Vision
 
 ## :snowboarder: Results
 <img width="600" alt="image" src="https://github.com/user-attachments/assets/5cae4fd3-c257-4774-936b-a6706b3e7f9e" />
+
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/14.gif)
 
 <img width="600" alt="image" src="https://github.com/user-attachments/assets/45fcec9b-ec34-40a5-8809-e261c79e48a1"/>
@@ -40,11 +41,11 @@ Official implementation of "Olympus: A Universal Task Router for Computer Vision
 
 <img width="600" alt="image" src="https://github.com/user-attachments/assets/8c145d55-2b70-4582-8620-52bdfcec3c60" />
 
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/8.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/7.gif)
 
 <img width="600" alt="image" src="https://github.com/user-attachments/assets/96c9fa52-2ed6-4658-99d7-13f8d55b040b" />
 
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/9.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/8.gif)
 
 <img width="600" alt="image" src="https://github.com/user-attachments/assets/0d9e9040-0fa1-4412-a21b-7de593c7cf60" />
 
