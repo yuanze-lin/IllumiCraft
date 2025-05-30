@@ -17,3 +17,12 @@ Official implementation of "Olympus: A Universal Task Router for Computer Vision
 ## :snowboarder: Results
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/1.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/2.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/3.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/4.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/5.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/6.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/7.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/8.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/9.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/10.gif)
