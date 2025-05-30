@@ -10,7 +10,7 @@ Official implementation of "IllumiCraft: Unified Geometry and Illumination Diffu
 - [ ] Release the model and the inference code.
 - [ ] Set up the project page.
   
-## :low_brightness: Overview 
+## :low_brightness: Method 
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets/framework.png)
 
