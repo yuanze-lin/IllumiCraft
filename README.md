@@ -5,7 +5,7 @@ Official implementation of "IllumiCraft: Unified Geometry and Illumination Diffu
 
 [![PDF](https://img.shields.io/badge/PDF-Download-orange?style=flat-square&logo=adobeacrobatreader&logoColor=white)]()
 [![arXiv](https://img.shields.io/badge/arXiv-2505.09612-b31b1b.svg)]()
-[![Project Page](https://img.shields.io/badge/Project%20Page-Visit%20Now-0078D4?style=flat-square&logo=googlechrome&logoColor=white)]()
+[![Project Page](https://img.shields.io/badge/Project%20Page-Visit%20Now-0078D4?style=flat-square&logo=googlechrome&logoColor=white)](https://yuanze-lin.me/IllumiCraft_page/)
 [![YouTube Video](https://img.shields.io/badge/YouTube%20Video-FF0000?style=flat-square&logo=youtube&logoColor=white)]()
 
 [Yuanze Lin](https://yuanze-lin.me/), [Yi-Wen Chen](https://wenz116.github.io/), [Yi-Hsuan Tsai](https://sites.google.com/site/yihsuantsai/), [Ronald Clark](https://www.ron-clark.com/), [João F. Henriques](https://www.robots.ox.ac.uk/~joao/), [Ming-Hsuan Yang](https://faculty.ucmerced.edu/mhyang/)
@@ -14,7 +14,7 @@ Official implementation of "IllumiCraft: Unified Geometry and Illumination Diffu
 - [ ] Release the training code.
 - [ ] Release IllumiCraft dataset.
 - [ ] Release the model and the inference code.
-- [ ] Set up the project page.
+- [x] Set up the project page.
   
 ## :low_brightness: Method 
 
