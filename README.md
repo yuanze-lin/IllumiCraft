@@ -1,4 +1,4 @@
-<p align="center"><img src="https://github.com/yuanze-lin/IllumiCraft/blob/main/assets/IllumiCraft.png" alt="icon" width="150" height="150" style="vertical-align:middle; margin-right:5px;" /></p>
+<img width="298" alt="image" src="https://github.com/user-attachments/assets/a6a3337b-173d-47fa-ab74-ff1256430b55" /><p align="center"><img src="https://github.com/yuanze-lin/IllumiCraft/blob/main/assets/IllumiCraft.png" alt="icon" width="150" height="150" style="vertical-align:middle; margin-right:5px;" /></p>
 
 # IllumiCraft: Unified Geometry and Illumination Diffusion for Controllable Video Generation  <br />
 
@@ -53,5 +53,8 @@ Official implementation of "IllumiCraft: Unified Geometry and Illumination Diffu
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/6500634d-e8a6-40d2-a090-38f40b014546" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/11.gif)
+<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/6500634d-e8a6-40d2-a090-38f40b014546" />
+
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/12.gif)
 
 
