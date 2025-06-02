@@ -1,4 +1,4 @@
-<img width="298" alt="image" src="https://github.com/user-attachments/assets/a6a3337b-173d-47fa-ab74-ff1256430b55" /><p align="center"><img src="https://github.com/yuanze-lin/IllumiCraft/blob/main/assets/IllumiCraft.png" alt="icon" width="150" height="150" style="vertical-align:middle; margin-right:5px;" /></p>
+<p align="center"><img src="https://github.com/yuanze-lin/IllumiCraft/blob/main/assets/IllumiCraft.png" alt="icon" width="150" height="150" style="vertical-align:middle; margin-right:5px;" /></p>
 
 # IllumiCraft: Unified Geometry and Illumination Diffusion for Controllable Video Generation  <br />
 
