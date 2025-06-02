@@ -26,13 +26,13 @@ Official implementation of "IllumiCraft: Unified Geometry and Illumination Diffu
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/aeb594c5-c32b-4ffa-bcda-0723e7612187" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/14.gif)
+<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/372d8fec-db53-4c35-b668-76055472e96b"/>
+
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/2.gif)
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/45fcec9b-ec34-40a5-8809-e261c79e48a1"/>
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/1.gif)
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/372d8fec-db53-4c35-b668-76055472e96b"/>
-
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/2.gif)
-<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/28f80790-2bb5-438a-a5d3-8468af8665d5" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/3.gif)
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/8dfc7346-b322-48f5-82b3-fafaad513edd" />
