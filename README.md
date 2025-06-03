@@ -54,5 +54,3 @@ Official implementation of "IllumiCraft: Unified Geometry and Illumination Diffu
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/11.gif)
 
-
-<img width="298" alt="image; margin: 10px 0 -5px;" src="https://github.com/user-attachments/assets/f9e71ce4-3bd1-4afb-b43d-41df9b072917" />
