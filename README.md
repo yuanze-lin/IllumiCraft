@@ -6,7 +6,7 @@ Official implementation of "IllumiCraft: Unified Geometry and Illumination Diffu
 
 
 [![PDF](https://img.shields.io/badge/PDF-Download-orange?style=flat-square&logo=adobeacrobatreader&logoColor=white)](https://arxiv.org/pdf/2506.03150)
-[![arXiv](https://img.shields.io/badge/arXiv-2505.09612-b31b1b.svg)](https://arxiv.org/abs/2506.03150)
+[![arXiv](https://img.shields.io/badge/arXiv-2506.03150-b31b1b.svg)](https://arxiv.org/abs/2506.03150)
 [![Project Page](https://img.shields.io/badge/Project%20Page-Visit%20Now-00d45c?style=flat-square&logo=googlechrome&logoColor=white)](https://yuanze-lin.me/IllumiCraft_page/)
 [![YouTube Video](https://img.shields.io/badge/YouTube%20Video-FF0000?style=flat-square&logo=youtube&logoColor=white)](https://youtu.be/qAV58sADEzo)
 
