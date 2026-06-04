@@ -12,6 +12,10 @@ Official implementation of "IllumiCraft: Unified Geometry and Illumination Diffu
 
 [Yuanze Lin](https://yuanze-lin.me/), [Yi-Wen Chen](https://wenz116.github.io/), [Yi-Hsuan Tsai](https://sites.google.com/site/yihsuantsai/), [Ronald Clark](https://www.ron-clark.com/), [Ming-Hsuan Yang](https://faculty.ucmerced.edu/mhyang/)
 
+## :low_brightness: Method 
+
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets/framework.png)
+
 ## :mega:  News
 - [x] Release the training code.
 - [x] Release IllumiCraft dataset.
@@ -87,10 +91,6 @@ Launch inference:
 ```bash
 bash inference.sh
 ```
-
-## :low_brightness: Method 
-
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets/framework.png)
 
 ## :snowboarder: Results
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/aeb594c5-c32b-4ffa-bcda-0723e7612187" />
