@@ -10,7 +10,6 @@ CAPTION_COLUMN="foreground_prompt.txt"
 FOREGROUND_COLUMN="foreground_videos.txt"
 
 # Optional: enable background-conditioned generation
-# Each line in these files should be aligned with the foreground list.
 BACKGROUND_COLUMN=background.txt
 LIGHT_CAPTION_COLUMN="lighting_prompt.txt"
 
