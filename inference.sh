@@ -1,11 +1,11 @@
 #!/bin/bash
 export CUDA_VISIBLE_DEVICES=0
 
-WAN_MODEL_PATH="/mnt/data0/yuanze/ckpt/Wan2.1-Fun-1.3B-Control"
-ILLUMICRAFT_CKPT_PATH="/mnt/data0/yuanze/illumicraft_checkpoint"
+WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"
+ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_checkpoint"
 OUTPUT_PATH="demo/outputs"
 
-DATA_ROOT="/mnt/data0/yuanze/dataset/demo_examples"
+DATA_ROOT="dataset/demo_examples"
 CAPTION_COLUMN="foreground_prompt.txt"
 FOREGROUND_COLUMN="foreground_videos.txt"
 
