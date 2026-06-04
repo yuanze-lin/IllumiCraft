@@ -180,13 +180,13 @@ We provide `foreground_video_example.py` as a reference script for generating fo
 
 ## ❓ FAQ
 
-### Q: Why do you use background videos during training but background images during inference?
+#### Q: Why do you use background videos during training but background images during inference?
 
 During training, we only use the **first frame** of each background video. Therefore, a background image is sufficient during inference. If you have a background image, you can simply repeat it to create a background video with the same length as the input foreground video.
 
 We originally used background videos in the dataset because we also explored background-video-conditioned video generation.
 
-### Q: Why does inference use both `prompt.txt` and `light.txt`?
+#### Q: Why does inference use both `prompt.txt` and `light.txt`?
 
 In the released demo examples, `prompt.txt` primarily describes the **foreground object and its appearance**, while `light.txt` describes the **background scene and lighting conditions** associated with the corresponding background image.
 
