@@ -12,11 +12,11 @@ Official implementation of "IllumiCraft: Unified Geometry and Illumination Diffu
 
 [Yuanze Lin](https://yuanze-lin.me/), [Yi-Wen Chen](https://wenz116.github.io/), [Yi-Hsuan Tsai](https://sites.google.com/site/yihsuantsai/), [Ronald Clark](https://www.ron-clark.com/), [Ming-Hsuan Yang](https://faculty.ucmerced.edu/mhyang/)
 
-## :low_brightness: Method 
+## 💡 Method 
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets/framework.png)
 
-## :mega:  News
+## 📣 News
 - [x] Release the training code.
 - [x] Release IllumiCraft dataset.
 - [x] Release the model and the inference code.
@@ -81,8 +81,6 @@ WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"
 ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_pretrained_weights"
 ```
 
-
-
 ## 🏋️ Training
 
 Edit the following fields in `train.sh`:
@@ -98,7 +96,6 @@ Launch training:
 ```bash
 bash train.sh
 ```
-
 
 ## 🎥 Inference
 
@@ -124,7 +121,7 @@ Launch inference:
 bash inference.sh
 ```
 
-## :snowboarder: Sample Results
+## 🎬 Sample Results
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/aeb594c5-c32b-4ffa-bcda-0723e7612187" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/14.gif)
