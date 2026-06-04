@@ -1,5 +1,4 @@
 #!/bin/bash
-# YOU MUST SET THE CUDA_HOME AND PATH AND LD_LIBRARY_PATH
 export CUDA_VISIBLE_DEVICES=0
 
 # Absolute paths
