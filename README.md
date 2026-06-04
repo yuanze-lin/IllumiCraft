@@ -102,8 +102,8 @@ Run video generation using a trained IllumiCraft checkpoint.
 Edit the following fields in `inference.sh`:
 
 ```bash
-MODEL_PATH=/path/to/Wan2.1-Fun-1.3B-Control
-CHECKPOINT_PATH=/path/to/illumicraft_checkpoint
+WAN_MODEL_PATH=/path/to/Wan2.1-Fun-1.3B-Control
+ILLUMICRAFT_CKPT_PATH=/path/to/illumicraft_pretrained_weights
 
 VALIDATION_IMAGES=/path/to/foreground_video.mp4
 VALIDATION_BACKGROUNDS=/path/to/background_video.mp4
