@@ -138,7 +138,7 @@ bash inference.sh
 
 #### Outputs
 
-For each sample, IllumiCraft generates:
+By default, for each sample, IllumiCraft generates:
 
 ```text
 sample_bg.mp4            # background-conditioned generation
