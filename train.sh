@@ -23,7 +23,7 @@ WARMUP_STEPS=100
 CHECKPOINT_STEPS=100
 TRAIN_BATCH_SIZE=2
 
-# Single GPU uncompiled training
+# Multi-GPU uncompiled training
 ACCELERATE_CONFIG_FILE="accelerate_configs/uncompiled_2.yaml"
 
 # Use paths that are set locally by the user
