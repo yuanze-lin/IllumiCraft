@@ -48,7 +48,7 @@ Download the IllumiCraft training dataset and demo examples:
 python download_illumicraft_dataset.py
 ```
 
-The script will automatically download the dataset from Hugging Face and organize it as:
+The script will automatically download the dataset from Hugging Face and organize it into two parts, 'train' and 'demo_examples', for training and inference, respectively:
 
 ```text
 dataset/
