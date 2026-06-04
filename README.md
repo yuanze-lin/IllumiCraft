@@ -139,18 +139,7 @@ bash inference.sh
 
 ### 🎭 Foreground Video Generation
 
-IllumiCraft uses foreground videos generated from an RGB video and its corresponding foreground mask video.
-
-We provide `foreground_video_example.py` as a minimal reference implementation demonstrating this preprocessing step.
-
-The script takes:
-
-- 🎥 An input RGB video
-- 🎭 A foreground mask video, where:
-  - Foreground pixels are `(255, 255, 255)`
-  - Background pixels are `(0, 0, 0)`
-
-The foreground video is obtained by compositing the foreground region onto a constant gray background.
+We provide `foreground_video_example.py` as a reference script for generating foreground videos from an RGB video and its corresponding mask video, where foreground pixels are `(255, 255, 255)` and background pixels are `(0, 0, 0)`.
 
 > **Note:** `foreground_video_example.py` is provided only as a reference example and is not the exact preprocessing pipeline used to construct the IllumiCraft dataset.
 > 
