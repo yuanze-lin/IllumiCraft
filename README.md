@@ -190,6 +190,8 @@ We originally used background videos in the dataset for training because we also
 
 In the released `demo_examples`, `prompt.txt` primarily describes the **foreground object and its appearance**, while `light.txt` describes the **background scene and lighting conditions** associated with the corresponding background image `demo_examples/background_images`.
 
+Since the background images in `demo_examples` are not paired with the foreground videos and can be combined arbitrarily, `light.txt` is used to provide scene and illumination information that is not contained in `prompt.txt`.
+
 During training, however, `prompt.txt` contains captions describing the **entire video**, including both foreground and background content.
 
 ## 📚 Citation
