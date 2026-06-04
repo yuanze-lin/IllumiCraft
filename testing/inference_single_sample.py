@@ -195,7 +195,7 @@ def generate_video(
     base_prompt = args.base_prompt.strip()
     prompt = None
     if args.lighting_prompt and args.lighting_prompt.strip():
-        prompt = f"{base_prompt}, {args.lighting_prompt.strip()}"
+        prompt = f"{base_prompt[:-1]}, {args.lighting_prompt.strip().lower()}"
 
     output_root = Path(args.output_path)
     output_root.mkdir(parents=True, exist_ok=True)
@@ -204,7 +204,8 @@ def generate_video(
     # No-background generation.
     nobg_args = dict(pipeline_args)
     nobg_args["control_video"] = foreground_frames
-    nobg_args["prompt"] = base_prompt
+    nobg_args["prompt"] = prompt if prompt is not None else base_prompt
+    print(nobg_args["prompt"])
     if hdr_maps is not None:
         nobg_args["hdr_maps"] = hdr_maps
     if tracking_maps is not None:
@@ -240,6 +241,7 @@ def generate_video(
         bg_args["control_video"] = foreground_frames
         bg_args["ref_image"] = ref_image
         bg_args["prompt"] = prompt if prompt is not None else base_prompt
+        print(bg_args["prompt"])
         if hdr_maps is not None:
             bg_args["hdr_maps"] = hdr_maps
         if tracking_maps is not None:
