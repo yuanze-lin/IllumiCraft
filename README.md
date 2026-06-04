@@ -126,7 +126,6 @@ WAN_MODEL_PATH=/path/to/Wan2.1-Fun-1.3B-Control
 ILLUMICRAFT_CKPT_PATH=/path/to/illumicraft_pretrained_weights
 
 DATA_ROOT=/path/to/dataset
-OUTPUT_DIR=outputs
 ```
 
 Launch inference:
