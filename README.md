@@ -199,7 +199,10 @@ We originally used background videos in the dataset for training because we also
 
 Since the background images used during inference are independently collected and can be freely replaced with custom images, they are not paired with the foreground videos. Therefore, `light.txt` is used to provide scene and illumination information that is not contained in `prompt.txt`.
 
-> **Note:** If a background image and foreground video are paired, a single caption describing the entire scene can be used and stored in `prompt.txt`. Otherwise, for **arbitrary background image customization**, we recommend using `prompt.txt` to describe the foreground and `light.txt` to describe the background scene and lighting conditions.
+> **Note:**
+> For paired data (e.g., formal evaluation), where the foreground, background, caption, and ground-truth video correspond to the same scene, a single caption describing the entire scene can be stored in `prompt.txt`.
+>
+> For arbitrary background image customization, we recommend using `prompt.txt` to describe the foreground and `light.txt` to describe the background scene and lighting conditions.
 
 ## 📚 Citation
 
