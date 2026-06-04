@@ -186,7 +186,7 @@ During training, we only use the **first frame** of each background video. There
 
 We originally used background videos in the dataset for training because we also explored background-video-conditioned video generation.
 
-### Q: Why does inference use both `prompt.txt` and `light.txt`?
+#### Q: Why does inference use both `prompt.txt` and `light.txt`?
 
 🏋️ **Training**
 
