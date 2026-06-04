@@ -9,6 +9,8 @@ Official implementation of "IllumiCraft: Unified Geometry and Illumination Diffu
 [![arXiv](https://img.shields.io/badge/arXiv-2506.03150-b31b1b.svg)](https://arxiv.org/abs/2506.03150)
 [![Project Page](https://img.shields.io/badge/Project%20Page-Visit%20Now-00d45c?style=flat-square&logo=googlechrome&logoColor=white)](https://yuanze-lin.me/IllumiCraft_page/)
 [![YouTube Video](https://img.shields.io/badge/YouTube%20Video-FF0000?style=flat-square&logo=youtube&logoColor=white)](https://youtu.be/qAV58sADEzo)
+[![Model](https://img.shields.io/badge/🤗%20Model-Download-yellow?style=flat-square)](https://huggingface.co/YuanzeLin/Illumicraft-checkpoints)
+[![Dataset](https://img.shields.io/badge/🤗%20Dataset-Download-yellow?style=flat-square)](https://huggingface.co/datasets/YuanzeLin/IllumiCraft)
 
 [Yuanze Lin](https://yuanze-lin.me/), [Yi-Wen Chen](https://wenz116.github.io/), [Yi-Hsuan Tsai](https://sites.google.com/site/yihsuantsai/), [Ronald Clark](https://www.ron-clark.com/), [Ming-Hsuan Yang](https://faculty.ucmerced.edu/mhyang/)
 
