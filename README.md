@@ -131,15 +131,9 @@ bash inference.sh
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/372d8fec-db53-4c35-b668-76055472e96b"/>
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/2.gif)
-<!-- <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/45fcec9b-ec34-40a5-8809-e261c79e48a1"/>
+<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/8dfc7346-b322-48f5-82b3-fafaad513edd" />
 
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/1.gif)
-<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/372d8fec-db53-4c35-b668-76055472e96b"/>
-
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/3.gif) -->
-<!-- <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/8dfc7346-b322-48f5-82b3-fafaad513edd" />
-
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/4.gif) -->
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/4.gif)
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/a8e9f972-9b6d-4423-a90d-c7a88687d2dd" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/5.gif)
@@ -155,6 +149,13 @@ bash inference.sh
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/6500634d-e8a6-40d2-a090-38f40b014546" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/11.gif)
+
+<!-- <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/45fcec9b-ec34-40a5-8809-e261c79e48a1"/>
+
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/1.gif)
+<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/372d8fec-db53-4c35-b668-76055472e96b"/>
+
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/3.gif) -->
 
 ## 📖 Citation
 
