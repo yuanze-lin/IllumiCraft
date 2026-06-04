@@ -141,7 +141,7 @@ bash inference.sh
 
 We provide `foreground_video_example.py` as a reference script for generating foreground videos from an RGB video and its corresponding mask video, where foreground pixels are `(255, 255, 255)` and background pixels are `(0, 0, 0)`.
 
-> **Note:** `foreground_video_example.py` is provided only as a reference example.
+> **Note:** `foreground_video_example.py` is provided as a reference code snippet for generating foreground videos from an RGB video and its corresponding binary mask video.
 > 
 ## 🎬 Sample Results
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/aeb594c5-c32b-4ffa-bcda-0723e7612187" />
