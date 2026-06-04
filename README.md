@@ -119,6 +119,10 @@ bash train.sh
 
 ## 🎥 Inference
 
+IllumiCraft supports both **dataset-style inference** and **single-sample inference**.
+
+### Dataset-style inference
+
 Run video generation using a trained IllumiCraft checkpoint.
 
 Edit the following fields in `inference.sh`:
@@ -136,6 +140,23 @@ Launch inference:
 bash inference.sh
 ```
 
+#### Dataset structure
+
+```text
+demo_examples/
+├── foreground_videos.txt
+├── foreground_prompt.txt
+├── background_images.txt      # optional
+├── lighting_prompt.txt        # optional
+├── tracking_videos.txt        # optional
+└── hdr_videos.txt             # optional
+```
+
+- `foreground_videos.txt` contains foreground video paths.
+- `foreground_prompt.txt` contains the corresponding text prompts.
+- `background_images.txt` and `lighting_prompt.txt` are paired line-by-line and are used for background-conditioned generation.
+- `tracking_videos.txt` and `hdr_videos.txt` are optional control signals.
+ 
 #### Outputs
 
 By default, for each sample, IllumiCraft generates:
@@ -149,6 +170,56 @@ sample_nobg_concat.mp4   # foreground video | generated video
 ```
 
 `background_images.txt` and `lighting_prompt.txt` are paired line-by-line. If they are not provided, only the no-background generation is produced.
+
+### Single-sample inference
+
+For quick testing, IllumiCraft also supports direct inference on a single foreground video without requiring dataset text files.
+
+Launch:
+
+```bash
+bash inference_single_sample.sh
+```
+
+Example configuration:
+
+```bash
+#!/bin/bash
+export CUDA_VISIBLE_DEVICES=0
+
+WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"
+ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_checkpoint"
+OUTPUT_PATH="demo/single_sample_outputs"
+
+FOREGROUND_VIDEO_PATH="demo/eval/foreground_videos_00000.mp4"
+FOREGROUND_PROMPT="A majestic waterfall cascades down a rugged cliff into a serene pool."
+
+# Optional background-conditioned generation
+BACKGROUND_PATH=""
+LIGHTING_PROMPT="Cool-blue spotlights beam through mist onto a central pool of light, creating high-contrast cinematic depth and a moody, immersive atmosphere."
+
+python testing/inference_single_sample.py \
+    --pretrained_model_name_or_path "$WAN_MODEL_PATH" \
+    --config_path config/wan.yaml \
+    --model_path "$ILLUMICRAFT_CKPT_PATH" \
+    --foreground_video_path "$FOREGROUND_VIDEO_PATH" \
+    --base_prompt "$FOREGROUND_PROMPT" \
+    --output_path "$OUTPUT_PATH" \
+    ${LIGHTING_PROMPT:+--lighting_prompt "$LIGHTING_PROMPT"} \
+    ${BACKGROUND_PATH:+--background_path "$BACKGROUND_PATH"}
+```
+
+#### Outputs
+
+```text
+sample_bg.mp4            # background-conditioned generation (if enabled)
+sample_bg_concat.mp4     # foreground video | background | generated video
+
+sample_nobg.mp4          # generation without background conditioning
+sample_nobg_concat.mp4   # foreground video | generated video
+```
+
+`BACKGROUND_PATH` and `LIGHTING_PROMPT` are optional. When either of them is omitted, IllumiCraft automatically falls back to no-background generation.
 
 ### 🎭 Foreground Video Generation
 
