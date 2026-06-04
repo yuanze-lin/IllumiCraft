@@ -137,9 +137,9 @@ bash inference.sh
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/372d8fec-db53-4c35-b668-76055472e96b"/>
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/3.gif) -->
-<img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/8dfc7346-b322-48f5-82b3-fafaad513edd" />
+<!-- <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/8dfc7346-b322-48f5-82b3-fafaad513edd" />
 
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/4.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/4.gif) -->
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/a8e9f972-9b6d-4423-a90d-c7a88687d2dd" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/5.gif)
