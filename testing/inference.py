@@ -197,7 +197,7 @@ def generate_video(
     if os.path.exists(bg_reference_imgs_path):
         bg_reference_imgs = file_lines_to_list(bg_reference_imgs_path)
 
-    light_prompt_path = os.path.join(args.data_root, "light.txt")
+    light_prompt_path = os.path.join(args.data_root, "light_prompt.txt")
     if os.path.exists(light_prompt_path):
         light_prompts = file_lines_to_list(light_prompt_path)
 
