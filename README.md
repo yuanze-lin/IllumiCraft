@@ -40,10 +40,24 @@ conda env update -n illumicraft -f environment.yml
 
 ## 📂 Dataset Preparation
 
-The IllumiCraft dataset is shown with the following structure:
+Download the IllumiCraft training dataset and demo examples:
+
+```bash
+python download_illumicraft_dataset.py
+```
+
+The script will automatically download the dataset from Hugging Face and organize it as:
 
 ```text
 dataset/
+├── train/
+└── demo_examples/
+```
+
+The training dataset will be stored in:
+
+```text
+dataset/train/
 ├── foreground_videos/
 ├── background_videos/
 ├── tracking_videos/
@@ -57,7 +71,7 @@ dataset/
 └── lighting_videos.txt
 ```
 
-Update the dataset path in `train.sh` before training.
+Use `dataset/train/` as the `DATA_ROOT` in `train.sh` and `dataset/demo_examples/` as the `DATA_ROOT` in `inference.sh`.
 
 ## 📥 Download Pretrained Weights
 
