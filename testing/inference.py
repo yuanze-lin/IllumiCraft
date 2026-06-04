@@ -43,7 +43,7 @@ from models.illumicraft import (
     WanTransformer3DModelTracking,
 )
 
-from training.utils import save_side_by_side_video 
+from training.utils import save_side_by_side_video, save_side_by_side_foreground_generated_video
 
 
 def filter_kwargs(cls, kwargs):
@@ -132,6 +132,29 @@ def prepare_frames(path, height_buckets, width_buckets, frame_buckets, image_tra
 
     return frames
 
+def _video_to_uint8_array(video):
+    """Convert a video tensor/array to uint8 NHWC format."""
+    if torch.is_tensor(video):
+        arr = video.detach().cpu().float().numpy()
+    else:
+        arr = np.asarray(video).astype(np.float32)
+
+    if arr.ndim != 4:
+        raise ValueError(f"Expected a 4D video tensor/array, got shape {arr.shape}")
+
+    # Accept either [F, C, H, W] or [F, H, W, C]
+    if arr.shape[1] in (1, 3) and arr.shape[-1] not in (1, 3):
+        arr = np.transpose(arr, (0, 2, 3, 1))
+
+    # Normalize common ranges to [0, 255]
+    if arr.min() >= -1.5 and arr.max() <= 1.5:
+        if arr.min() < 0:
+            arr = (arr + 1.0) / 2.0
+        arr = arr * 255.0
+
+    arr = np.clip(arr, 0, 255).astype(np.uint8)
+    return arr
+
 def generate_video(
     args: Dict[str, Any],
     pipeline_args: Dict[str, Any],
@@ -167,9 +190,23 @@ def generate_video(
     output_root = Path(args.output_path)
     output_root.mkdir(parents=True, exist_ok=True)
 
-    reference_imgs = file_lines_to_list(os.path.join(args.data_root, "background_images.txt"))
-    light_prompts = file_lines_to_list(os.path.join(args.data_root, "light.txt"))
-    reference_images = None
+    bg_reference_imgs = None
+    light_prompts = None
+
+    bg_reference_imgs_path = os.path.join(args.data_root, args.background_column)
+    if os.path.exists(bg_reference_imgs_path):
+        bg_reference_imgs = file_lines_to_list(bg_reference_imgs_path)
+
+    light_prompt_path = os.path.join(args.data_root, "light.txt")
+    if os.path.exists(light_prompt_path):
+        light_prompts = file_lines_to_list(light_prompt_path)
+
+    use_background = (
+        bg_reference_imgs is not None
+        and light_prompts is not None
+        and len(bg_reference_imgs) > 0
+        and len(light_prompts) > 0
+    )
 
     tracking_videos = (
         file_lines_to_list(os.path.join(args.data_root, args.tracking_column))
@@ -181,30 +218,22 @@ def generate_video(
         if args.hdr_column is not None
         else None
     )
-    
+
     foreground_list = []
     for i in tqdm(range(len(foreground_videos))):
-        video_output_path = os.path.join(
-                output_root.as_posix(),
-                Path(foreground_videos[i]).stem + ".mp4",
-        )
-        if os.path.exists(video_output_path):
-            print("Already exist: ", video_output_path)
-            foreground_list.append(foreground_videos[i])
-            continue
-
-        print("Processing video index: " + str(i) + ", | Video name: " +
-              str(foreground_videos[i]) + "| Processed number: " + str(len(foreground_list)))
-
-        if foreground_videos[i] not in foreground_list:
-            foreground_list.append(foreground_videos[i])
-        else:
-            print("skip: ", foreground_videos[i])
-            continue
+        print("Processing video index: "  + str(i) + ", | Video name: " + str(foreground_videos[i]) + "| Processed number: " + str(len(foreground_list)))
 
         foreground_map_path = Path(os.path.join(args.data_root, foreground_videos[i]))
-        foreground_frames = prepare_frames(foreground_map_path, args.height_buckets, args.width_buckets, args.frame_buckets, image_transforms, 
-                                    num_frames=args.frame_buckets[0], width=args.width, height=args.height)
+        foreground_frames = prepare_frames(
+            foreground_map_path,
+            args.height_buckets,
+            args.width_buckets,
+            args.frame_buckets,
+            image_transforms,
+            num_frames=args.frame_buckets[0],
+            width=args.width,
+            height=args.height,
+        )
 
         hdr_maps = None
         tracking_maps = None
@@ -238,7 +267,6 @@ def generate_video(
                 hdr_maps = hdr_maps.unsqueeze(0).to(device=device, dtype=dtype)
                 hdr_maps = hdr_maps.permute(0, 2, 1, 3, 4)
                 n, c, d, h, w = hdr_maps.shape
-                # Resize HDR maps to the transformer conditioning resolution.
                 hdr_maps_flat = hdr_maps.permute(0, 2, 1, 3, 4).reshape(n * d, c, h, w)
                 hdr_maps_flat = F.interpolate(hdr_maps_flat, size=(32, 32), mode="bilinear", align_corners=False)
                 hdr_maps = hdr_maps_flat.view(n, d, c, 32, 32).permute(0, 2, 1, 3, 4)
@@ -249,53 +277,96 @@ def generate_video(
                 tracking_latent_dist = pipe.vae.encode(tracking_maps).latent_dist
                 tracking_maps = tracking_latent_dist.sample().to(device=device, dtype=dtype)
 
-        random_idx = random.randrange(len(reference_imgs))
-        ref_map_path = reference_imgs[random_idx]
+        base_prompt = prompts[i].split(".")[0]
+        random_idx = random.randrange(len(light_prompts))
         light_prompt = light_prompts[random_idx]
-        ref_map_path = Path(os.path.join(args.data_root, ref_map_path))
-        ref_frames = prepare_frames(ref_map_path, args.height_buckets, args.width_buckets, args.frame_buckets, image_transforms,
-                                    num_frames=args.frame_buckets[0], width=args.width, height=args.height)
-        
-        with torch.no_grad():
-            ref_frames = ref_frames.unsqueeze(0).to(device=device, dtype=dtype)
-            ref_frames = ref_frames.permute(0, 2, 1, 3, 4)  # to [B, C, F, H, W]
-            ref_image = ref_frames[:,:,0,:,:].unsqueeze(2) # to [B, C, 1, H, W]
+        prompt = base_prompt + ", " + light_prompts[random_idx].lower()
 
-        pipeline_args["control_video"] = foreground_frames
-        if ref_image is not None:
-            pipeline_args["ref_image"] = ref_image
+        # -----------------------
+        # 1) Background-conditioned generation (optional)
+        # -----------------------
+        if use_background:
+            ref_map_path = Path(os.path.join(args.data_root, bg_reference_imgs[random_idx]))
+            ref_frames = prepare_frames(
+                ref_map_path,
+                args.height_buckets,
+                args.width_buckets,
+                args.frame_buckets,
+                image_transforms,
+                num_frames=args.frame_buckets[0],
+                width=args.width,
+                height=args.height,
+            )
 
+            with torch.no_grad():
+                ref_frames = ref_frames.unsqueeze(0).to(device=device, dtype=dtype)
+                ref_frames = ref_frames.permute(0, 2, 1, 3, 4)
+                ref_image = ref_frames[:, :, 0:1, :, :]
+
+            bg_pipeline_args = dict(pipeline_args)
+            bg_pipeline_args["control_video"] = foreground_frames
+            bg_pipeline_args["ref_image"] = ref_image
+            if args.hdr_column is not None and hdr_maps is not None:
+                bg_pipeline_args["hdr_maps"] = hdr_maps
+            if args.tracking_column is not None and tracking_maps is not None:
+                bg_pipeline_args["tracking_maps"] = tracking_maps
+            bg_pipeline_args["prompt"] = prompt
+
+            bg_video_output_path = os.path.join(
+                output_root.as_posix(),
+                Path(foreground_videos[i]).stem + "_bg.mp4",
+            )
+            print("[BG]", bg_video_output_path)
+            print("[BG prompt]", bg_pipeline_args["prompt"])
+
+            generated_video_bg = pipe(
+                **bg_pipeline_args,
+                generator=torch.Generator(device=device).manual_seed(seed),
+                output_type="np",
+            ).videos.numpy()[0]
+            export_to_video(generated_video_bg, bg_video_output_path, fps=fps)
+
+            bg_concat_path = bg_video_output_path.replace(".mp4", "_concat.mp4")
+            save_side_by_side_video(
+                foreground_frames=foreground_frames[0].permute(1, 2, 3, 0),  # [F, H, W, C]
+                background_image=ref_image,
+                generated_video=generated_video_bg,
+                output_path=bg_concat_path,
+                fps=fps,
+            )
+
+        # -----------------------
+        # 2) Generation without background
+        # -----------------------
+        nobg_pipeline_args = dict(pipeline_args)
+        nobg_pipeline_args["control_video"] = foreground_frames
         if args.hdr_column is not None and hdr_maps is not None:
-            pipeline_args["hdr_maps"] = hdr_maps
+            nobg_pipeline_args["hdr_maps"] = hdr_maps
         if args.tracking_column is not None and tracking_maps is not None:
-            pipeline_args["tracking_maps"] = tracking_maps
+            nobg_pipeline_args["tracking_maps"] = tracking_maps
+        nobg_pipeline_args["prompt"] = prompt
 
-        # Combine the base prompt with the lighting prompt used for spotlight-style inference.
-        pipeline_args["prompt"] = prompts[i].split(".")[0] + ", " + light_prompt.lower()
-        video_output_path = os.path.join(
+        nobg_video_output_path = os.path.join(
             output_root.as_posix(),
-            Path(foreground_videos[i]).stem + "_" + str(random_idx) + ".mp4",
+            Path(foreground_videos[i]).stem + "_nobg.mp4",
         )
-        print(video_output_path)
-        print(pipeline_args["prompt"])
-        export_path = video_output_path
+        print("[NoBG]", nobg_video_output_path)
+        print("[NoBG prompt]", nobg_pipeline_args["prompt"])
 
-        generated_video = pipe(
-            **pipeline_args,
+        generated_video_nobg = pipe(
+            **nobg_pipeline_args,
             generator=torch.Generator(device=device).manual_seed(seed),
             output_type="np",
         ).videos.numpy()[0]
-        export_to_video(generated_video, export_path, fps=fps)
-        
-        concat_path = export_path.replace(".mp4", "_concat.mp4")
-        save_side_by_side_video(
+        export_to_video(generated_video_nobg, nobg_video_output_path, fps=fps)
+
+        nobg_concat_path = nobg_video_output_path.replace(".mp4", "_concat.mp4")
+        save_side_by_side_foreground_generated_video(
             foreground_frames=foreground_frames,
-            background_image=ref_image,
-            generated_video=generated_video,
-            output_path=concat_path,
+            generated_video=generated_video_nobg,
+            output_path=nobg_concat_path,
             fps=fps,
         )
-
 
 def main():
     """Parse arguments, build the pipeline, and launch inference."""
@@ -321,10 +392,10 @@ def main():
         help="The column of the dataset containing the HDR map for each sample.",
     )
     parser.add_argument(
-        "--reference_image_column",
+        "--background_column",
         type=str,
         default=None,
-        help="The column of the dataset containing the reference image paths.",
+        help="The column of the dataset containing the background image paths.",
     )
     parser.add_argument(
         "--caption_column",
@@ -449,5 +520,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
 
 
