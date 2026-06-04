@@ -1,21 +1,23 @@
 #!/bin/bash
 export CUDA_VISIBLE_DEVICES=0
 
-# Absolute paths
-WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"
-ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_pretrained_weights"
+WAN_MODEL_PATH="/mnt/data0/yuanze/ckpt/Wan2.1-Fun-1.3B-Control"
+ILLUMICRAFT_CKPT_PATH="/mnt/data0/yuanze/illumicraft_checkpoint"
 OUTPUT_PATH="demo/outputs"
-DATA_ROOT="dataset/demo_examples/"
+
+DATA_ROOT="/mnt/data0/yuanze/dataset/demo_examples"
 CAPTION_COLUMN="foreground_prompt.txt"
+light_caption_column="light_prompt.txt"
 FOREGROUND_COLUMN="foreground_videos.txt"
 BACKGROUND_COLUMN="background_images.txt"
 
-python testing/inference.py \
+python testing/inference2.py \
     --pretrained_model_name_or_path $WAN_MODEL_PATH \
     --data_root $DATA_ROOT \
-    --config_path "config/wan.yaml" \
+    --config_path config/wan.yaml \
     --model_path $ILLUMICRAFT_CKPT_PATH \
     --caption_column $CAPTION_COLUMN \
+    --light_caption_column $LIGHT_CAPTION_COLUMN \
     --foreground_column $FOREGROUND_COLUMN \
     --background_column $BACKGROUND_COLUMN \
     --output_path $OUTPUT_PATH
