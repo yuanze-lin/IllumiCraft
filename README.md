@@ -84,7 +84,7 @@ Edit the following fields in `train.sh`:
 
 ```bash
 DATA_ROOT=/path/to/train_dataset
-MODEL_PATH=/path/to/Wan2.1-Fun-1.3B-Control
+WAN_MODEL_PATH=/path/to/Wan2.1-Fun-1.3B-Control
 OUTPUT_PATH=checkpoints/illumicraft_weights
 ```
 
