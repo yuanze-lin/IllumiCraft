@@ -68,6 +68,23 @@ Launch training:
 ```bash
 bash train.sh
 ```
+
+### 📥 Download Pretrained Weights
+
+Before running inference, download the released IllumiCraft checkpoint:
+
+```bash
+python download_illumicraft_weights.py
+```
+
+The checkpoint will be automatically downloaded and saved locally.
+
+After downloading, update the checkpoint path in `inference.sh`:
+
+```bash
+CHECKPOINT_PATH=/path/to/illumicraft_checkpoint
+```
+
 ## 🎥 Inference
 
 Run video generation using a trained IllumiCraft checkpoint.
