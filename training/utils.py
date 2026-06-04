@@ -324,8 +324,8 @@ def save_side_by_side_video(
 
 def save_side_by_side_foreground_generated_video(foreground_frames, generated_video, output_path, fps):
     """Save foreground | generated-video comparison."""
-    left = _video_to_uint8_array(foreground_frames)
-    right = _video_to_uint8_array(generated_video)
+    left = _to_uint8_video(foreground_frames)
+    right = _to_uint8_video(generated_video)
 
     num_frames = min(len(left), len(right))
     if num_frames == 0:
