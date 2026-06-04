@@ -73,7 +73,7 @@ After downloading, verify that the checkpoint paths in `inference.sh` are correc
 
 ```bash
 WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"
-ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_weights"
+ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_pretrained_weights"
 ```
 
 
