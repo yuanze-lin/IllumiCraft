@@ -3,18 +3,18 @@
 export CUDA_VISIBLE_DEVICES=0
 
 # Absolute paths
-PRETRAINED_MODEL_PATH="/path/to/Wan2.1-Fun-1.3B-Control"
-MODEL_PATH="checkpoints/illumicraft"
+WAN_MODEL_PATH="/path/to/Wan2.1-Fun-1.3B-Control"
+ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_weights"
 OUTPUT_PATH="demo/outputs"
 DATA_ROOT="val_examples"
 CAPTION_COLUMN="prompt.txt"
 FOREGROUND_COLUMN="foreground_videos.txt"
 
 python testing/inference.py \
-    --pretrained_model_name_or_path $PRETRAINED_MODEL_PATH \
+    --pretrained_model_name_or_path $WAN_MODEL_PATH \
     --data_root $DATA_ROOT \
     --config_path "config/wan.yaml" \
-    --model_path $MODEL_PATH \
+    --model_path $ILLUMICRAFT_CKPT_PATH \
     --caption_column $CAPTION_COLUMN \
     --foreground_column $FOREGROUND_COLUMN \
     --output_path $OUTPUT_PATH
