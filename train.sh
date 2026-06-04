@@ -46,7 +46,7 @@ VALIDATION_PROMPT="A majestic waterfall cascades down a rugged cliff into a sere
 surrounded by lush greenery and ancient rock formations. The soft lighting enhances the
 tranquil atmosphere, with a subtle rainbow arc adding a touch of magic. As the scene continues,
 the waterfall remains a consistent, serene, and untouched natural spectacle, with the surrounding
-foliage and the soft lighting emphasizing the peacefulness and the beauty of the landscape"
+foliage and the soft lighting emphasizing the peacefulness and the beauty of the landscape."
 
 # Launch experiments with different hyperparameters.
 # Note: The command uses "-m pdb" to launch the Python debugger.
