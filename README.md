@@ -13,11 +13,78 @@ Official implementation of "IllumiCraft: Unified Geometry and Illumination Diffu
 [Yuanze Lin](https://yuanze-lin.me/), [Yi-Wen Chen](https://wenz116.github.io/), [Yi-Hsuan Tsai](https://sites.google.com/site/yihsuantsai/), [Ronald Clark](https://www.ron-clark.com/), [Ming-Hsuan Yang](https://faculty.ucmerced.edu/mhyang/)
 
 ## :mega:  News
-- [ ] Release the training code.
-- [ ] Release IllumiCraft dataset.
-- [ ] Release the model and the inference code.
+- [x] Release the training code.
+- [x] Release IllumiCraft dataset.
+- [x] Release the model and the inference code.
 - [x] Set up the project page.
-  
+
+## 🚀 Installation 
+```bash
+git clone https://github.com/yuanze-lin/IllumiCraft.git
+cd IllumiCraft
+
+conda create -n illumicraft python=3.10 -y
+conda activate illumicraft
+pip install torch==2.6.0+cu118 torchvision==0.21.0+cu118 torchaudio==2.6.0+cu118 --index-url https://download.pytorch.org/whl/cu118
+conda env update -n illumicraft -f environment.yml
+```
+
+## 📂 Dataset Preparation
+
+The IllumiCraft dataset is shown with the following structure:
+
+```text
+dataset/
+├── foreground_videos/
+├── background_videos/
+├── tracking_videos/
+├── lighting_videos/
+├── prompt.txt
+├── videos.txt
+├── foreground_videos.txt
+├── background_videos.txt
+├── tracking_videos.txt
+└── lighting_videos.txt
+```
+
+Update the dataset path in `train.sh` before training.
+
+## 🏋️ Training
+
+Edit the following fields in `train.sh`:
+
+```bash
+DATA_ROOT=/path/to/train_dataset
+MODEL_PATH=/path/to/Wan2.1-Fun-1.3B-Control
+OUTPUT_PATH=checkpoints/illumicraft_weights
+```
+
+Launch training:
+
+```bash
+bash train.sh
+```
+## 🎥 Inference
+
+Run video generation using a trained IllumiCraft checkpoint.
+
+Edit the following fields in `inference.sh`:
+
+```bash
+MODEL_PATH=/path/to/Wan2.1-Fun-1.3B-Control
+CHECKPOINT_PATH=/path/to/illumicraft_checkpoint
+
+VALIDATION_IMAGES=/path/to/foreground_video.mp4
+VALIDATION_BACKGROUNDS=/path/to/background_video.mp4
+TRACKING_MAP_PATH=/path/to/tracking_video.mp4
+HDR_MAP_PATH=/path/to/lighting_video.mp4
+
+OUTPUT_DIR=outputs
+```
+```bash
+bash inference.sh
+```
+
 ## :low_brightness: Method 
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets/framework.png)
