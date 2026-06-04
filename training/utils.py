@@ -272,13 +272,7 @@ def _to_uint8_video(frames):
     return frames
 
 
-def save_side_by_side_video(
-    foreground_frames,
-    background_image,
-    generated_video,
-    output_path,
-    fps=24,
-):
+def save_side_by_side_video(foreground_frames, background_image, generated_video, output_path, fps=24):
     """
     Save a video concatenating:
       foreground | repeated background | output
@@ -322,7 +316,7 @@ def save_side_by_side_video(
 
     writer.release()
 
-def save_side_by_side_foreground_generated_video(foreground_frames, generated_video, output_path, fps):
+def save_side_by_side_foreground_generated_video(foreground_frames, generated_video, output_path, fps=24):
     """Save foreground | generated-video comparison."""
     left = _to_uint8_video(foreground_frames)
     right = _to_uint8_video(generated_video)
