@@ -266,11 +266,10 @@ def _to_uint8_video(frames):
         frames = np.transpose(frames, (0, 2, 3, 1))
 
     if frames.dtype != np.uint8:
-        if frames.max() <= 1.0:
-            frames = np.clip(frames, 0.0, 1.0)
-            frames = (frames * 255.0).round().astype(np.uint8)
-        else:
-            frames = np.clip(frames, 0, 255).astype(np.uint8)
+        if frames.min() < 0.0 or frames.max() > 1.0:
+            frames = frames * 0.5 + 0.5
+        frames = np.clip(frames, 0.0, 1.0)
+        frames = (frames * 255.0).round().astype(np.uint8)
 
     return frames
 
