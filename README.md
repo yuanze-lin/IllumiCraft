@@ -58,7 +58,7 @@ dataset/
 
 Update the dataset path in `train.sh` before training.
 
-### 📥 Download Pretrained Weights
+## 📥 Download Pretrained Weights
 
 Before running training and inference, download both the base **Wan2.1-Fun-1.3B-Control** model and the released **IllumiCraft** checkpoint:
 
