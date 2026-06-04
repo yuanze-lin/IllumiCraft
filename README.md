@@ -48,6 +48,7 @@ dataset/
 ├── background_videos/
 ├── tracking_videos/
 ├── lighting_videos/
+├── videos/
 ├── prompt.txt
 ├── videos.txt
 ├── foreground_videos.txt
