@@ -277,10 +277,13 @@ def generate_video(
                 tracking_latent_dist = pipe.vae.encode(tracking_maps).latent_dist
                 tracking_maps = tracking_latent_dist.sample().to(device=device, dtype=dtype)
 
-        base_prompt = prompts[i].split(".")[0]
-        random_idx = random.randrange(len(light_prompts))
-        light_prompt = light_prompts[random_idx]
-        prompt = base_prompt + ", " + light_prompts[random_idx].lower()
+        if light_prompts is not None:
+            base_prompt = prompts[i].split(".")[0]
+            random_idx = random.randrange(len(light_prompts))
+            light_prompt = light_prompts[random_idx]
+            prompt = base_prompt + ", " + light_prompts[random_idx].lower()
+        else:
+            prompt = prompts[i]
 
         # -----------------------
         # 1) Background-conditioned generation (optional)
