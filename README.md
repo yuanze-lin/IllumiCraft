@@ -81,6 +81,9 @@ HDR_MAP_PATH=/path/to/lighting_video.mp4
 
 OUTPUT_DIR=outputs
 ```
+
+Launch inference:
+
 ```bash
 bash inference.sh
 ```
