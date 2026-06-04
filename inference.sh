@@ -7,9 +7,12 @@ OUTPUT_PATH="demo/outputs"
 
 DATA_ROOT="/mnt/data0/yuanze/dataset/demo_examples"
 CAPTION_COLUMN="foreground_prompt.txt"
-LIGHT_CAPTION_COLUMN="lighting_prompt.txt"
 FOREGROUND_COLUMN="foreground_videos.txt"
-BACKGROUND_COLUMN="background_images.txt"
+
+# Optional: enable background-conditioned generation
+# Each line in these files should be aligned with the foreground list.
+BACKGROUND_COLUMN=background.txt
+LIGHT_CAPTION_COLUMN="lighting_prompt.txt"
 
 python testing/inference.py \
     --pretrained_model_name_or_path $WAN_MODEL_PATH \
