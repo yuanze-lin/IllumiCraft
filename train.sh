@@ -29,7 +29,7 @@ ACCELERATE_CONFIG_FILE="accelerate_configs/uncompiled_2.yaml"
 # Use paths that are set locally by the user
 DATA_ROOT="/path/to/train_dataset"
 WAN_MODEL_PATH="/path/to/Wan2.1-Fun-1.3B-Control"
-OUTPUT_PATH="checkpoints/illumicraft_weights"
+OUTPUT_PATH="checkpoints/illumicraft-weights"
 CAPTION_COLUMN="prompt.txt"
 VIDEO_COLUMN="videos.txt"
 FOREGROUND_COLUMN="foreground_videos.txt"
