@@ -197,7 +197,7 @@ def generate_video(
     if os.path.exists(bg_reference_imgs_path):
         bg_reference_imgs = file_lines_to_list(bg_reference_imgs_path)
 
-    light_prompt_path = os.path.join(args.data_root, "light_prompt.txt")
+    light_prompt_path = os.path.join(args.data_root, args.light_caption_column)
     if os.path.exists(light_prompt_path):
         light_prompts = file_lines_to_list(light_prompt_path)
 
@@ -404,6 +404,12 @@ def main():
         help="The column of the dataset containing the instance prompt for each sample.",
     )
     parser.add_argument(
+        "--light_caption_column",
+        type=str,
+        default="text",
+        help="The column of the dataset containing the instance prompt for each sample.",
+    )
+    parser.add_argument(
         "--pretrained_model_name_or_path",
         type=str,
         default="Wan2.1-Fun-1.3B-Control",
@@ -516,11 +522,5 @@ def main():
         fps=24,
         seed=args.seed,
     )
-
-
 if __name__ == "__main__":
     main()
-
-
-
-
