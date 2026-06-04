@@ -28,7 +28,7 @@ ACCELERATE_CONFIG_FILE="accelerate_configs/uncompiled_2.yaml"
 
 # Use paths that are set locally by the user
 DATA_ROOT="/path/to/train_dataset"
-MODEL_PATH="/path/to/Wan2.1-Fun-1.3B-Control"
+WAN_MODEL_PATH="/path/to/Wan2.1-Fun-1.3B-Control"
 OUTPUT_PATH="checkpoints/illumicraft_weights"
 CAPTION_COLUMN="prompt.txt"
 VIDEO_COLUMN="videos.txt"
@@ -59,7 +59,7 @@ for learning_rate in "${LEARNING_RATES[@]}"; do
           --gpu_ids $GPU_IDS --num_processes $NUM_PROCESSES --main_process_port $PORT \
           training/train.py \
           --config_path="config/wan.yaml" \
-          --pretrained_model_name_or_path $MODEL_PATH \
+          --pretrained_model_name_or_path $WAN_MODEL_PATH \
           --data_root $DATA_ROOT \
           --caption_column $CAPTION_COLUMN \
           --video_column $VIDEO_COLUMN \
