@@ -202,7 +202,7 @@ sample_nobg.mp4          # generation without background conditioning
 sample_nobg_concat.mp4   # foreground video | generated video
 ```
 
-`BACKGROUND_PATH` and `LIGHTING_PROMPT` are optional. When either of them is omitted, IllumiCraft automatically falls back to no-background generation.
+`BACKGROUND_PATH` and `LIGHTING_PROMPT` are optional. When `BACKGROUND_PATH` is omitted, IllumiCraft automatically falls back to no-background generation.
 
 ### 🎭 Foreground Video Generation
 
