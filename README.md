@@ -107,6 +107,11 @@ Edit the following fields in `train.sh`:
 ```bash
 DATA_ROOT=/path/to/train_dataset
 WAN_MODEL_PATH=/path/to/Wan2.1-Fun-1.3B-Control
+
+VALIDATION_IMAGES=/path/to/foreground_video.mp4
+VALIDATION_BACKGROUNDS=/path/to/background_video.mp4
+TRACKING_MAP_PATH=/path/to/tracking_video.mp4
+HDR_MAP_PATH=/path/to/lighting_video.mp4
 ```
 
 Launch training:
@@ -124,11 +129,6 @@ Edit the following fields in `inference.sh`:
 ```bash
 WAN_MODEL_PATH=/path/to/Wan2.1-Fun-1.3B-Control
 ILLUMICRAFT_CKPT_PATH=/path/to/illumicraft_pretrained_weights
-
-VALIDATION_IMAGES=/path/to/foreground_video.mp4
-VALIDATION_BACKGROUNDS=/path/to/background_video.mp4
-TRACKING_MAP_PATH=/path/to/tracking_video.mp4
-HDR_MAP_PATH=/path/to/lighting_video.mp4
 
 OUTPUT_DIR=outputs
 ```
