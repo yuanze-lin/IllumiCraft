@@ -140,23 +140,6 @@ Launch inference:
 bash inference.sh
 ```
 
-#### Dataset structure
-
-```text
-demo_examples/
-├── foreground_videos.txt
-├── foreground_prompt.txt
-├── background_images.txt      # optional
-├── lighting_prompt.txt        # optional
-├── tracking_videos.txt        # optional
-└── hdr_videos.txt             # optional
-```
-
-- `foreground_videos.txt` contains foreground video paths.
-- `foreground_prompt.txt` contains the corresponding text prompts.
-- `background_images.txt` and `lighting_prompt.txt` are paired line-by-line and are used for background-conditioned generation.
-- `tracking_videos.txt` and `hdr_videos.txt` are optional control signals.
- 
 #### Outputs
 
 By default, for each sample, IllumiCraft generates:
