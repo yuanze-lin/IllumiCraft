@@ -240,30 +240,29 @@ def print_memory(device: Union[str, torch.device]) -> None:
 
 def _to_uint8_video(frames):
     """
-    Convert video data into uint8 frames with shape [F, H, W, C].
-    Accepts torch.Tensor / np.ndarray in layouts:
-      - [1, C, F, H, W]
-      - [C, F, H, W]
-      - [F, C, H, W]
-      - [F, H, W, C]
+    Convert a video tensor/array into uint8 frames with shape [F, H, W, C].
+    Accepts:
+      - torch.Tensor [1, C, F, H, W]
+      - torch.Tensor [C, F, H, W]
+      - torch.Tensor [F, H, W, C]
+      - np.ndarray with the same layouts
     """
     if isinstance(frames, torch.Tensor):
-        frames = frames.detach().cpu().float().numpy()
-    elif not isinstance(frames, np.ndarray):
+        frames = frames.detach().cpu()
+        if frames.ndim == 5:
+            frames = frames[0]  # [C, F, H, W]
+        if frames.ndim == 4 and frames.shape[0] in (1, 3):
+            frames = frames.permute(1, 2, 3, 0)  # [F, H, W, C]
+        frames = frames.float().numpy()
+
+    elif isinstance(frames, np.ndarray):
+        if frames.ndim == 5:
+            frames = frames[0]
+        if frames.ndim == 4 and frames.shape[0] in (1, 3):
+            frames = np.transpose(frames, (1, 2, 3, 0))
+
+    else:
         raise TypeError(f"Unsupported frames type: {type(frames)}")
-
-    if frames.ndim == 5 and frames.shape[0] == 1:
-        frames = frames[0]  # [C, F, H, W]
-
-    if frames.ndim != 4:
-        raise ValueError(f"Expected 4D or 5D video input, got shape {frames.shape}")
-
-    # [C, F, H, W] -> [F, H, W, C]
-    if frames.shape[0] in (1, 3):
-        frames = np.transpose(frames, (1, 2, 3, 0))
-    # [F, C, H, W] -> [F, H, W, C]
-    elif frames.shape[1] in (1, 3):
-        frames = np.transpose(frames, (0, 2, 3, 1))
 
     if frames.dtype != np.uint8:
         if frames.min() < 0.0 or frames.max() > 1.0:
