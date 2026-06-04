@@ -7,6 +7,7 @@ from typing import Optional, Tuple, Union
 import torch
 from accelerate.logging import get_logger
 from diffusers.models.embeddings import get_3d_rotary_pos_embed
+from pathlib import Path
 
 
 logger = get_logger(__name__)
@@ -235,44 +236,52 @@ def print_memory(device: Union[str, torch.device]) -> None:
     print(f"{memory_allocated=:.3f} GB")
     print(f"{max_memory_allocated=:.3f} GB")
     print(f"{max_memory_reserved=:.3f} GB")
-    
+
 
 def _to_uint8_video(frames):
     """
-    Convert a video tensor/array into uint8 frames with shape [F, H, W, C].
-    Accepts:
-      - torch.Tensor [1, C, F, H, W]
-      - torch.Tensor [C, F, H, W]
-      - torch.Tensor [F, H, W, C]
-      - np.ndarray with the same layouts
+    Convert video data into uint8 frames with shape [F, H, W, C].
+    Accepts torch.Tensor / np.ndarray in layouts:
+      - [1, C, F, H, W]
+      - [C, F, H, W]
+      - [F, C, H, W]
+      - [F, H, W, C]
     """
     if isinstance(frames, torch.Tensor):
-        frames = frames.detach().cpu()
-        if frames.ndim == 5:
-            frames = frames[0]  # [C, F, H, W]
-        if frames.ndim == 4 and frames.shape[0] in (1, 3):
-            frames = frames.permute(1, 2, 3, 0)  # [F, H, W, C]
-        frames = frames.float().numpy()
-
-    elif isinstance(frames, np.ndarray):
-        if frames.ndim == 5:
-            frames = frames[0]
-        if frames.ndim == 4 and frames.shape[0] in (1, 3):
-            frames = np.transpose(frames, (1, 2, 3, 0))
-
-    else:
+        frames = frames.detach().cpu().float().numpy()
+    elif not isinstance(frames, np.ndarray):
         raise TypeError(f"Unsupported frames type: {type(frames)}")
 
+    if frames.ndim == 5 and frames.shape[0] == 1:
+        frames = frames[0]  # [C, F, H, W]
+
+    if frames.ndim != 4:
+        raise ValueError(f"Expected 4D or 5D video input, got shape {frames.shape}")
+
+    # [C, F, H, W] -> [F, H, W, C]
+    if frames.shape[0] in (1, 3):
+        frames = np.transpose(frames, (1, 2, 3, 0))
+    # [F, C, H, W] -> [F, H, W, C]
+    elif frames.shape[1] in (1, 3):
+        frames = np.transpose(frames, (0, 2, 3, 1))
+
     if frames.dtype != np.uint8:
-        if frames.min() < 0.0 or frames.max() > 1.0:
-            frames = frames * 0.5 + 0.5
-        frames = np.clip(frames, 0.0, 1.0)
-        frames = (frames * 255.0).round().astype(np.uint8)
+        if frames.max() <= 1.0:
+            frames = np.clip(frames, 0.0, 1.0)
+            frames = (frames * 255.0).round().astype(np.uint8)
+        else:
+            frames = np.clip(frames, 0, 255).astype(np.uint8)
 
     return frames
 
 
-def save_side_by_side_video(foreground_frames, background_image, generated_video, output_path, fps=24):
+def save_side_by_side_video(
+    foreground_frames,
+    background_image,
+    generated_video,
+    output_path,
+    fps=24,
+):
     """
     Save a video concatenating:
       foreground | repeated background | output
@@ -314,28 +323,45 @@ def save_side_by_side_video(foreground_frames, background_image, generated_video
         concat_bgr = cv2.cvtColor(concat, cv2.COLOR_RGB2BGR)
         writer.write(concat_bgr)
 
-    writer.release()
+    writer.release() 
 
-def save_side_by_side_foreground_generated_video(foreground_frames, generated_video, output_path, fps=24):
-    """Save foreground | generated-video comparison."""
-    left = _to_uint8_video(foreground_frames)
-    right = _to_uint8_video(generated_video)
 
-    num_frames = min(len(left), len(right))
+def save_side_by_side_foreground_generated_video(
+    foreground_frames,
+    generated_video,
+    output_path,
+    fps=24
+):
+    fg = _to_uint8_video(foreground_frames)
+    out = _to_uint8_video(generated_video)
+
+    num_frames = min(fg.shape[0], out.shape[0])
     if num_frames == 0:
         raise ValueError("Cannot save an empty comparison video.")
 
-    target_h, target_w = left[0].shape[:2]
-    frames = []
-    for idx in range(num_frames):
-        l = left[idx]
-        r = right[idx]
+    fg = fg[:num_frames]
+    out = out[:num_frames]
 
-        if l.shape[:2] != (target_h, target_w):
-            l = cv2.resize(l, (target_w, target_h), interpolation=cv2.INTER_LINEAR)
-        if r.shape[:2] != (target_h, target_w):
-            r = cv2.resize(r, (target_w, target_h), interpolation=cv2.INTER_LINEAR)
+    h, w = out.shape[1], out.shape[2]
 
-        frames.append(np.concatenate([l, r], axis=1))
+    def _resize_seq(seq):
+        resized = []
+        for frame in seq:
+            if frame.shape[0] != h or frame.shape[1] != w:
+                frame = cv2.resize(frame, (w, h), interpolation=cv2.INTER_LINEAR)
+            resized.append(frame)
+        return np.stack(resized, axis=0)
 
-    export_to_video(np.stack(frames, axis=0), output_path, fps=fps)
+    fg = _resize_seq(fg)
+    out = _resize_seq(out)
+
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+
+    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+    writer = cv2.VideoWriter(output_path, fourcc, fps, (w * 2, h))
+
+    for f, o in zip(fg, out):
+        concat = np.concatenate([f, o], axis=1)
+        writer.write(cv2.cvtColor(concat, cv2.COLOR_RGB2BGR))
+
+    writer.release()
