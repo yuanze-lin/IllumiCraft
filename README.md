@@ -142,7 +142,7 @@ By default, for each sample, IllumiCraft generates:
 
 ```text
 sample_bg.mp4            # background-conditioned generation
-sample_bg_concat.mp4     # foreground video | background image | generated video
+sample_bg_concat.mp4     # foreground video | background | generated video
 
 sample_nobg.mp4          # generation without background
 sample_nobg_concat.mp4   # foreground video | generated video
