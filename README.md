@@ -53,6 +53,22 @@ dataset/
 
 Update the dataset path in `train.sh` before training.
 
+### 📥 Download Pretrained Weights
+
+Before running inference, download the released IllumiCraft checkpoint:
+
+```bash
+python download_illumicraft_weights.py
+```
+
+The pretrained weights will be automatically downloaded to:
+
+```text
+checkpoints/illumicraft_weights/
+```
+After downloading, update the checkpoint path in `inference.sh`:
+
+
 ## 🏋️ Training
 
 Edit the following fields in `train.sh`:
@@ -68,21 +84,6 @@ Launch training:
 ```bash
 bash train.sh
 ```
-
-### 📥 Download Pretrained Weights
-
-Before running inference, download the released IllumiCraft checkpoint:
-
-```bash
-python download_illumicraft_weights.py
-```
-
-The pretrained weights will be automatically downloaded to:
-
-```text
-checkpoints/illumicraft_weights/
-```
-After downloading, update the checkpoint path in `inference.sh`:
 
 
 ## 🎥 Inference
