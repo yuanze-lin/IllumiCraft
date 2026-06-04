@@ -22,6 +22,11 @@ Official implementation of "IllumiCraft: Unified Geometry and Illumination Diffu
 - [x] Release the model and the inference code.
 - [x] Set up the project page.
 
+## ⭐ Star History
+
+If you find this repository useful, please consider giving it a star ⭐.
+
+
 ## 🚀 Installation 
 ```bash
 git clone https://github.com/yuanze-lin/IllumiCraft.git
@@ -150,4 +155,19 @@ bash inference.sh
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/6500634d-e8a6-40d2-a090-38f40b014546" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/11.gif)
+
+## 📖 Citation
+
+If you find IllumiCraft useful for your research, please consider citing:
+
+```bibtex
+@article{lin2026illumicraft,
+  title={Illumicraft: Unified geometry and illumination diffusion for controllable video generation},
+  author={Lin, Yuanze and Chen, Yi-Wen and Tsai, Yi-Hsuan and Clark, Ronald and Yang, Ming-Hsuan},
+  journal={Advances in Neural Information Processing Systems},
+  volume={38},
+  pages={27798--27829},
+  year={2026}
+}
+```
 
