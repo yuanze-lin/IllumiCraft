@@ -136,7 +136,7 @@ Launch inference:
 bash inference.sh
 ```
 
-### Outputs
+#### Outputs
 
 For each sample, IllumiCraft generates:
 
