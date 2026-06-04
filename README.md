@@ -82,6 +82,7 @@ The pretrained weights will be automatically downloaded to:
 ```text
 checkpoints/illumicraft_weights/
 ```
+The default `inference.sh` configuration assumes the weights are located in this directory.
 
 
 ## 🎥 Inference
