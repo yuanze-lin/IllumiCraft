@@ -6,7 +6,7 @@ export CUDA_VISIBLE_DEVICES=0
 PRETRAINED_MODEL_PATH="/path/to/Wan2.1-Fun-1.3B-Control"
 MODEL_PATH="checkpoints/illumicraft"
 OUTPUT_PATH="demo/outputs"
-DATA_ROOT="examples"
+DATA_ROOT="val_examples"
 CAPTION_COLUMN="prompt.txt"
 FOREGROUND_COLUMN="foreground_videos.txt"
 
