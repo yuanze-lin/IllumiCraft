@@ -148,7 +148,7 @@ sample_nobg.mp4          # generation without background
 sample_nobg_concat.mp4   # foreground video | generated video
 ```
 
-`background.txt` and `lighting_prompt.txt` are paired line-by-line. If they are not provided, only the no-background generation is produced.
+`background_images.txt` and `lighting_prompt.txt` are paired line-by-line. If they are not provided, only the no-background generation is produced.
 
 ### 🎭 Foreground Video Generation
 
