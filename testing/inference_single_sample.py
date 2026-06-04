@@ -201,37 +201,19 @@ def generate_video(
     output_root.mkdir(parents=True, exist_ok=True)
     stem = Path(args.foreground_video_path).stem
 
-    # No-background generation.
-    nobg_args = dict(pipeline_args)
-    nobg_args["control_video"] = foreground_frames
-    nobg_args["prompt"] = prompt if prompt is not None else base_prompt
-    print(nobg_args["prompt"])
-    if hdr_maps is not None:
-        nobg_args["hdr_maps"] = hdr_maps
-    if tracking_maps is not None:
-        nobg_args["tracking_maps"] = tracking_maps
-
-    nobg_path = output_root / f"{stem}_nobg.mp4"
-    generated_video_nobg = pipe(
-        **nobg_args,
-        generator=torch.Generator(device=device).manual_seed(seed),
-        output_type="np",
-    ).videos.numpy()[0]
-    export_to_video(generated_video_nobg, str(nobg_path), fps=fps)
-    save_side_by_side_foreground_generated_video(foreground_frames, generated_video_nobg, str(nobg_path).replace(".mp4", "_concat.mp4"), fps=fps)
-
-    # Background-conditioned generation, only if background_path is provided.
     if args.background_path:
+        # Background-conditioned generation only
         ref_frames = prepare_frames(
-            args.background_path,
-            args.height_buckets,
-            args.width_buckets,
-            args.frame_buckets,
-            image_transforms,
-            num_frames=args.frame_buckets[0],
-            width=args.width,
-            height=args.height,
+        args.background_path,
+        args.height_buckets,
+        args.width_buckets,
+        args.frame_buckets,
+        image_transforms,
+        num_frames=args.frame_buckets[0],
+        width=args.width,
+        height=args.height,
         )
+
         with torch.no_grad():
             ref_frames = ref_frames.unsqueeze(0).to(device=device, dtype=dtype)
             ref_frames = ref_frames.permute(0, 2, 1, 3, 4)
@@ -241,24 +223,55 @@ def generate_video(
         bg_args["control_video"] = foreground_frames
         bg_args["ref_image"] = ref_image
         bg_args["prompt"] = prompt if prompt is not None else base_prompt
-        print(bg_args["prompt"])
+
         if hdr_maps is not None:
             bg_args["hdr_maps"] = hdr_maps
         if tracking_maps is not None:
             bg_args["tracking_maps"] = tracking_maps
 
         bg_path = output_root / f"{stem}_bg.mp4"
+
         generated_video_bg = pipe(
             **bg_args,
             generator=torch.Generator(device=device).manual_seed(seed),
             output_type="np",
         ).videos.numpy()[0]
+
         export_to_video(generated_video_bg, str(bg_path), fps=fps)
+
         save_side_by_side_video(
             foreground_frames,
             ref_image,
             generated_video_bg,
             str(bg_path).replace(".mp4", "_concat.mp4"),
+            fps=fps,
+        )
+
+    else:
+        # No-background generation only
+        nobg_args = dict(pipeline_args)
+        nobg_args["control_video"] = foreground_frames
+        nobg_args["prompt"] = prompt if prompt is not None else base_prompt
+
+        if hdr_maps is not None:
+            nobg_args["hdr_maps"] = hdr_maps
+        if tracking_maps is not None:
+            nobg_args["tracking_maps"] = tracking_maps
+
+        nobg_path = output_root / f"{stem}_nobg.mp4"
+
+        generated_video_nobg = pipe(
+            **nobg_args,
+            generator=torch.Generator(device=device).manual_seed(seed),
+            output_type="np",
+        ).videos.numpy()[0]
+
+        export_to_video(generated_video_nobg, str(nobg_path), fps=fps)
+
+        save_side_by_side_foreground_generated_video(
+            foreground_frames,
+            generated_video_nobg,
+            str(nobg_path).replace(".mp4", "_concat.mp4"),
             fps=fps,
         )
 
