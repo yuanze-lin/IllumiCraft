@@ -186,13 +186,18 @@ During training, we only use the **first frame** of each background video. There
 
 We originally used background videos in the dataset for training because we also explored background-video-conditioned video generation.
 
-#### Q: Why does inference use both `prompt.txt` and `light.txt`?
+### Q: Why does inference use both `prompt.txt` and `light.txt`?
 
-In the released `demo_examples`, `prompt.txt` primarily describes the **foreground object and its appearance**, while `light.txt` describes the **background scene and lighting conditions** associated with the corresponding background image in `demo_examples/background_images`.
+🧑‍🏫 **Training**
 
-The background images are independently collected and can be freely replaced with custom images. Since they are not paired with the foreground videos, `light.txt` provides scene and illumination information that is not captured by `prompt.txt`.
+- `prompt.txt` describes the **entire video**, including both foreground and background content.
 
-During training, however, `prompt.txt` contains captions describing the **entire video**, including both foreground and background content.
+🎥 **Inference**
+
+- `prompt.txt` describes the **foreground object and its appearance**.
+- `light.txt` describes the **background scene and lighting conditions** associated with the selected background image.
+
+Since the background images are independently collected, can be freely replaced with custom images, and are not paired with the foreground videos, `light.txt` provides scene information that is not contained in `prompt.txt`.
 
 ## 📚 Citation
 
