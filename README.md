@@ -89,12 +89,14 @@ checkpoints/
 └── illumicraft_weights/
 ```
 
-After downloading, verify that the checkpoint paths in `inference.sh` are correctly set to:
+After downloading, verify that the model paths in `inference.sh` are correctly configured:
 
 ```bash
 WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"
 ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_pretrained_weights"
 ```
+
+`WAN_MODEL_PATH` points to the base Wan2.1 model and is shared by both ``training.sh`` and ``inference.sh``. `ILLUMICRAFT_CKPT_PATH` points to the pretrained IllumiCraft checkpoint used during inference.
 
 ## 🏋️ Training
 
