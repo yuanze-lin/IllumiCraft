@@ -203,6 +203,7 @@ def generate_video(
 
     if args.background_path:
         # Background-conditioned generation only
+        print('Perform background-conditioned video generation')
         ref_frames = prepare_frames(
         args.background_path,
         args.height_buckets,
@@ -248,6 +249,7 @@ def generate_video(
         )
 
     else:
+        print('Perform no-background video generation')
         # No-background generation only
         nobg_args = dict(pipeline_args)
         nobg_args["control_video"] = foreground_frames
