@@ -184,7 +184,7 @@ We provide `foreground_video_example.py` as a reference script for generating fo
 
 During training, we only use the **first frame** of each background video. Therefore, a background image is sufficient during inference. If you have a background image, you can simply repeat it to create a background video with the same length as the input foreground video.
 
-We originally used background videos in the dataset because we also explored background-video-conditioned video generation.
+We originally used background videos in the dataset for training because we also explored background-video-conditioned video generation.
 
 #### Q: Why does inference use both `prompt.txt` and `light.txt`?
 
