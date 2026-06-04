@@ -17,7 +17,7 @@ python testing/inference.py \
     --config_path config/wan.yaml \
     --model_path $ILLUMICRAFT_CKPT_PATH \
     --caption_column $CAPTION_COLUMN \
-    --light_caption_column $LIGHT_CAPTION_COLUMN \
+    --lighting_caption_column $LIGHT_CAPTION_COLUMN \
     --foreground_column $FOREGROUND_COLUMN \
     --background_column $BACKGROUND_COLUMN \
     --output_path $OUTPUT_PATH
