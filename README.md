@@ -96,7 +96,7 @@ WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"
 ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_pretrained_weights"
 ```
 
-`WAN_MODEL_PATH` points to the base Wan2.1 model and is shared by both ``training.sh`` and ``inference.sh``. `ILLUMICRAFT_CKPT_PATH` points to the pretrained IllumiCraft checkpoint used during inference.
+`WAN_MODEL_PATH` points to the base Wan2.1 model and is shared by both ``train.sh`` and ``inference.sh``. `ILLUMICRAFT_CKPT_PATH` points to the pretrained IllumiCraft checkpoint used during inference.
 
 ## 🏋️ Training
 
