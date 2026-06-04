@@ -6,7 +6,7 @@ WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"
 ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_pretrained_weights"
 OUTPUT_PATH="demo/outputs"
 DATA_ROOT="dataset/demo_examples/"
-CAPTION_COLUMN="prompt.txt"
+CAPTION_COLUMN="foreground_prompt.txt"
 FOREGROUND_COLUMN="foreground_videos.txt"
 BACKGROUND_COLUMN="background_images.txt"
 
