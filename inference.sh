@@ -8,6 +8,7 @@ OUTPUT_PATH="demo/outputs"
 DATA_ROOT="dataset/demo_examples/"
 CAPTION_COLUMN="prompt.txt"
 FOREGROUND_COLUMN="foreground_videos.txt"
+BACKGROUND_COLUMN="background_images.txt"
 
 python testing/inference.py \
     --pretrained_model_name_or_path $WAN_MODEL_PATH \
@@ -16,4 +17,5 @@ python testing/inference.py \
     --model_path $ILLUMICRAFT_CKPT_PATH \
     --caption_column $CAPTION_COLUMN \
     --foreground_column $FOREGROUND_COLUMN \
+    --background_column $BACKGROUND_COLUMN \
     --output_path $OUTPUT_PATH
