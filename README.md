@@ -188,7 +188,7 @@ We originally used background videos in the dataset for training because we also
 
 #### Q: Why does inference use both `prompt.txt` and `light.txt`?
 
-In the released ``demo_examples``, `prompt.txt` primarily describes the **foreground object and its appearance**, while `light.txt` describes the **background scene and lighting conditions** associated with the corresponding background image.
+In the released `demo_examples`, `prompt.txt` primarily describes the **foreground object and its appearance**, while `light.txt` describes the **background scene and lighting conditions** associated with the corresponding background image `demo_examples/background_images`.
 
 During training, however, `prompt.txt` contains captions describing the **entire video**, including both foreground and background content.
 
