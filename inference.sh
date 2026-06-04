@@ -7,7 +7,7 @@ OUTPUT_PATH="demo/outputs"
 
 DATA_ROOT="/mnt/data0/yuanze/dataset/demo_examples"
 CAPTION_COLUMN="foreground_prompt.txt"
-LIGHT_CAPTION_COLUMN="light_prompt.txt"
+LIGHT_CAPTION_COLUMN="lighting_prompt.txt"
 FOREGROUND_COLUMN="foreground_videos.txt"
 BACKGROUND_COLUMN="background_images.txt"
 
