@@ -321,3 +321,27 @@ def save_side_by_side_video(
         writer.write(concat_bgr)
 
     writer.release()
+
+def save_side_by_side_foreground_generated_video(foreground_frames, generated_video, output_path, fps):
+    """Save foreground | generated-video comparison."""
+    left = _video_to_uint8_array(foreground_frames)
+    right = _video_to_uint8_array(generated_video)
+
+    num_frames = min(len(left), len(right))
+    if num_frames == 0:
+        raise ValueError("Cannot save an empty comparison video.")
+
+    target_h, target_w = left[0].shape[:2]
+    frames = []
+    for idx in range(num_frames):
+        l = left[idx]
+        r = right[idx]
+
+        if l.shape[:2] != (target_h, target_w):
+            l = cv2.resize(l, (target_w, target_h), interpolation=cv2.INTER_LINEAR)
+        if r.shape[:2] != (target_h, target_w):
+            r = cv2.resize(r, (target_w, target_h), interpolation=cv2.INTER_LINEAR)
+
+        frames.append(np.concatenate([l, r], axis=1))
+
+    export_to_video(np.stack(frames, axis=0), output_path, fps=fps)
