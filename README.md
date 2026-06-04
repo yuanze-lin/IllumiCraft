@@ -197,7 +197,7 @@ We originally used background videos in the dataset for training because we also
 - `prompt.txt` describes the **foreground object and its appearance**.
 - `light.txt` describes the **background scene and lighting conditions** associated with the selected background image.
 
-Since the background images are independently collected, can be freely replaced with custom images, and are not paired with the foreground videos, `light.txt` provides scene information that is not contained in `prompt.txt`.
+Since the background images used during inference are independently collected and can be freely replaced with custom images, they are not paired with the foreground videos. Therefore, `light.txt` is used to provide scene and illumination information that is not contained in `prompt.txt`.
 
 ## 📚 Citation
 
