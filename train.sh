@@ -9,7 +9,7 @@ export TORCH_NCCL_ENABLE_MONITORING=0
 export TOKENIZERS_PARALLELISM=false
 export HF_HUB_DOWNLOAD_TIMEOUT=30
 
-# Use only one GPU (GPU index 0) and one process.
+# Use only 4 GPUs (GPU index 0, 1, 2, 3) and 4 processes.
 GPU_IDS="0,1,2,3"
 NUM_PROCESSES=4
 PORT=28800
