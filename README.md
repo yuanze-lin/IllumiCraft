@@ -199,6 +199,8 @@ We originally used background videos in the dataset for training because we also
 
 Since the background images used during inference are independently collected and can be freely replaced with custom images, they are not paired with the foreground videos. Therefore, `light.txt` is used to provide scene and illumination information that is not contained in `prompt.txt`.
 
+> **Note:** If a background image and foreground video are paired, a single caption describing the entire scene can be used and stored in `prompt.txt`. Otherwise, we recommend using `prompt.txt` to describe the foreground and `light.txt` to describe the background scene and lighting conditions.
+
 ## 📚 Citation
 
 If you find IllumiCraft useful for your research, please consider citing:
