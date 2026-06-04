@@ -38,10 +38,10 @@ TRACKING_COLUMN="tracking_videos.txt"
 BACKGROUND_COLUMN="background_videos.txt"
 
 # Validation parameters
-HDR_MAP_PATH="/path/to/validation/lighting_videos/00000.mp4"
-TRACKING_MAP_PATH="/path/to/validation/tracking_videos/00000.mp4"
-VALIDATION_IMAGES="/path/to/validation/foreground_videos/00000.mp4"
-VALIDATION_BACKGROUNDS="/path/to/validation/background_videos/00000.mp4"
+HDR_MAP_PATH="demo/eval/lighting_videos_00000.mp4"
+TRACKING_MAP_PATH="demo/eval/tracking_videos_00000.mp4"
+VALIDATION_IMAGES="demo/eval/foreground_videos_00000.mp4"
+VALIDATION_BACKGROUNDS="demo/eval/background_videos_00000.mp4"
 VALIDATION_PROMPT="A majestic waterfall cascades down a rugged cliff into a serene pool,
 surrounded by lush greenery and ancient rock formations. The soft lighting enhances the
 tranquil atmosphere, with a subtle rainbow arc adding a touch of magic. As the scene continues,
