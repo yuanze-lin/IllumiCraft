@@ -55,18 +55,27 @@ Update the dataset path in `train.sh` before training.
 
 ### 📥 Download Pretrained Weights
 
-Before running inference, download the released IllumiCraft checkpoint:
+Before running training and inference, download both the base **Wan2.1-Fun-1.3B-Control** model and the released **IllumiCraft** checkpoint:
 
 ```bash
-python download_illumicraft_weights.py
+python download_weights.py
 ```
 
-The pretrained weights will be automatically downloaded to:
+The script will automatically download the checkpoints to:
 
 ```text
-checkpoints/illumicraft_weights/
+checkpoints/
+├── Wan2.1-Fun-1.3B-Control/
+└── illumicraft_weights/
 ```
-After downloading, update the checkpoint path in `inference.sh`:
+
+After downloading, verify that the checkpoint paths in `inference.sh` are correctly set to:
+
+```bash
+WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"
+ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_weights"
+```
+
 
 
 ## 🏋️ Training
