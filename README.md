@@ -22,7 +22,7 @@ Official implementation of "IllumiCraft: Unified Geometry and Illumination Diffu
 - [x] Release the model and the inference code.
 - [x] Set up the project page.
 
-## ⭐ Star History
+## ❤️ Support IllumiCraft
 
 If you find this repository useful, please consider giving it a star ⭐.
 
@@ -157,7 +157,7 @@ bash inference.sh
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/3.gif) -->
 
-## 📖 Citation
+## 📚 Citation
 
 If you find IllumiCraft useful for your research, please consider citing:
 
