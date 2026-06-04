@@ -11,7 +11,7 @@ LIGHT_CAPTION_COLUMN="light_prompt.txt"
 FOREGROUND_COLUMN="foreground_videos.txt"
 BACKGROUND_COLUMN="background_images.txt"
 
-python testing/inference2.py \
+python testing/inference.py \
     --pretrained_model_name_or_path $WAN_MODEL_PATH \
     --data_root $DATA_ROOT \
     --config_path config/wan.yaml \
