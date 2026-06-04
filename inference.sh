@@ -3,7 +3,7 @@
 export CUDA_VISIBLE_DEVICES=0
 
 # Absolute paths
-WAN_MODEL_PATH="/path/to/Wan2.1-Fun-1.3B-Control"
+WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"
 ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_weights"
 OUTPUT_PATH="demo/outputs"
 DATA_ROOT="val_examples"
