@@ -124,7 +124,7 @@ Launch inference:
 bash inference.sh
 ```
 
-## :snowboarder: Results
+## :snowboarder: Sample Results
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/aeb594c5-c32b-4ffa-bcda-0723e7612187" />
 
 ![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/14.gif)
