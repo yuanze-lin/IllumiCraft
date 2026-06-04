@@ -77,13 +77,12 @@ Before running inference, download the released IllumiCraft checkpoint:
 python download_illumicraft_weights.py
 ```
 
-The checkpoint will be automatically downloaded and saved locally.
+The pretrained weights will be automatically downloaded to:
 
-After downloading, update the checkpoint path in `inference.sh`:
-
-```bash
-CHECKPOINT_PATH=/path/to/illumicraft_checkpoint
+```text
+checkpoints/illumicraft_weights/
 ```
+
 
 ## 🎥 Inference
 
