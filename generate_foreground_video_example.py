@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 video_path = "input_video.mp4"
-mask_path = "mask_video.mp4"
+mask_path = "mask_video.mp4" # foreground pixels are (255, 255, 255) and background pixels are (0, 0, 0)
 out_path = "foreground_video.mp4"
 
 cap_v = cv2.VideoCapture(video_path)
