@@ -3,7 +3,7 @@ import numpy as np
 
 video_path = "input_video.mp4" # Input RGB video
 mask_path = "mask_video.mp4" # foreground pixels are (255, 255, 255) and background pixels are (0, 0, 0)
-out_path = "foreground_video.mp4" # # Generated foreground video with a gray background
+out_path = "foreground_video.mp4" # Generated foreground video with a gray background
 
 cap_v = cv2.VideoCapture(video_path)
 cap_m = cv2.VideoCapture(mask_path)
