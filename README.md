@@ -213,6 +213,10 @@ bash run_gradio_demo.sh
 
 The demo includes preloaded examples from `demo/eval/`, which can be used directly or freely replaced with your own inputs.
 
+<p align="center">
+  <img src="demo/gradio.png" alt="Gradio Demo" width="100%">
+</p>
+
 ## 🎭 Foreground Video Preparation
 
 We provide `foreground_video_example.py` as a reference script for generating foreground videos from an RGB video and its corresponding mask video, where foreground pixels are `(255, 255, 255)` and background pixels are `(0, 0, 0)`.
