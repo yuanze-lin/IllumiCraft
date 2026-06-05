@@ -80,7 +80,7 @@ Use `dataset/train/` as the `DATA_ROOT` in `train.sh` and `dataset/demo_examples
 Before running training and inference, download both the base **Wan2.1-Fun-1.3B-Control** model and the released **IllumiCraft** checkpoint:
 
 ```bash
-python utils/download_weights.py
+python utils/download_illumicraft_weights.py
 ```
 
 The script will automatically download the checkpoints to:
