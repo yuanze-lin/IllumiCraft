@@ -173,8 +173,8 @@ def build_app():
            <div style="font-family: monospace;">
            Foreground video            : Foreground subject video with a uniform #888B88 gray background.<br>
            Foreground prompt           : Description of the foreground subject.<br>
-           Background image (Optional) : Reference image for relighting guidance.<br>
-           Lighting prompt (Optional)  : Description of the desired lighting effect.
+           Background image (optional) : Reference image for relighting guidance.<br>
+           Lighting prompt (optional)  : Description of the desired lighting effect.
            </div>
         """)  
         with gr.Row():
@@ -184,7 +184,7 @@ def build_app():
                 visible=True,
             )
             background_image = gr.Image(
-                label="Optional background image",
+                label="Background image (optional)",
                 type="filepath",
                 value="demo/eval/custom_background.jpg",
                 visible=True,
