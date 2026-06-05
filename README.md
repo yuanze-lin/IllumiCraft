@@ -219,7 +219,7 @@ The demo includes preloaded examples from `demo/eval/`, which can be used direct
 
 ## 🎭 Foreground Video Preparation
 
-We provide `utils/foreground_video_example.py` as a reference script for generating foreground videos from an RGB video and its corresponding mask video, where foreground pixels are `(255, 255, 255)` and background pixels are `(0, 0, 0)`.
+We provide `utils/generate_foreground_video_example.py` as a reference script for generating foreground videos from an RGB video and its corresponding mask video, where foreground pixels are `(255, 255, 255)` and background pixels are `(0, 0, 0)`.
 
 > **Note:** `foreground_video_example.py` is provided only as a reference code snippet for generating foreground videos from an RGB video and its corresponding mask video.
 > 
