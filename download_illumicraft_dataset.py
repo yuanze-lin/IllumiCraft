@@ -10,7 +10,7 @@ REPO_ID = "YuanzeLin/IllumiCraft"
 # dataset/
 # ├── train/
 # └── demo_examples/
-DOWNLOAD_DIR = Path("/mnt/data0/yuanze/dataset")
+DOWNLOAD_DIR = Path("dataset")
 
 # Downloaded shard location from HF
 SHARD_DIR = DOWNLOAD_DIR / "train_shards"
