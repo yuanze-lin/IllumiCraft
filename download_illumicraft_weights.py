@@ -11,8 +11,8 @@ print("Downloaded to checkpoints/Wan2.1-Fun-1.3B-Control")
 snapshot_download(
     repo_id="YuanzeLin/Illumicraft-checkpoints",
     local_dir="checkpoints/illumicraft_pretrained_weights",
-    local_dir_use_symlinks=False,
-    resume_download=True,
+    allow_patterns="checkpoint/*",
 )
 
 print("Downloaded to checkpoints/illumicraft_weights")
+
