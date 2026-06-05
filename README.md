@@ -195,7 +195,7 @@ sample_nobg_concat.mp4     # foreground video | generated video
 ```
 
 
-### 🎭 Foreground Video Generation
+### 🎭 Foreground Video Preparation
 
 We provide `foreground_video_example.py` as a reference script for generating foreground videos from an RGB video and its corresponding mask video, where foreground pixels are `(255, 255, 255)` and background pixels are `(0, 0, 0)`.
 
