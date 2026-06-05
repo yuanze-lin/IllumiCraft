@@ -196,7 +196,7 @@ sample_nobg_concat.mp4     # foreground video | generated video
 
 ## 🖥️ Gradio Demo
 
-IllumiCraft also provides an interactive Gradio demo for relighting custom videos and images.
+IllumiCraft also provides an interactive Gradio demo for relighting custom videos.
 
 Before launching the demo, set the model paths in `run_gradio_demo.sh`:
 
