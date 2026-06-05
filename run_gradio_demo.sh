@@ -1,5 +1,6 @@
 #!/bin/bash
 export CUDA_VISIBLE_DEVICES=0
+export PYTHONPATH=$(pwd):$PYTHONPATH
 
 WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"
 ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_pretrained_weights"
