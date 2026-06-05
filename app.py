@@ -141,7 +141,7 @@ def build_app():
         dtype=dtype,
     )
 
-    def relight_video(foreground_video, foreground_prompt, lighting_prompt, background_file, seed):
+    def relight_video(foreground_video, foreground_prompt, lighting_prompt, background_image, seed):
         return run_gradio_inference(
             pipe=pipe,
             wan_model_path=args.wan_model_path,
@@ -151,7 +151,7 @@ def build_app():
             foreground_video=foreground_video,
             foreground_prompt=foreground_prompt,
             lighting_prompt=lighting_prompt,
-            background_file=background_file,
+            background_file=background_image,
             seed=seed,
             guidance_scale=args.guidance_scale,
             height=args.height,
@@ -178,18 +178,17 @@ def build_app():
            </div>
         """)  
         with gr.Row():
-            foreground_video = gr.File(
+            foreground_video = gr.Video(
                 label="Foreground video",
-                type="filepath",
-                file_types=[".mp4", ".mov", ".avi", ".mkv", ".webm"],
                 value="demo/eval/foreground_videos_00000.mp4",
+                visible=True,
             )
-            background_file = gr.File(
+            background_image = gr.Image(
                 label="Optional background image",
                 type="filepath",
-                file_types=[".jpg", ".jpeg", ".png", ".webp"],
-                value="demo/eval/custom_background.jpg"
-            )
+                value="demo/eval/custom_background.jpg",
+                visible=True,
+            ) 
 
         foreground_prompt = gr.Textbox(
             label="Foreground prompt",
@@ -208,7 +207,7 @@ def build_app():
 
         run_btn.click(
             fn=relight_video,
-            inputs=[foreground_video, foreground_prompt, lighting_prompt, background_file, seed],
+            inputs=[foreground_video, foreground_prompt, lighting_prompt, background_image, seed],
             outputs=[output_video],
         )
 
