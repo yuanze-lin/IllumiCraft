@@ -192,10 +192,10 @@ def generate_video(
             tracking_latent_dist = pipe.vae.encode(tracking_maps).latent_dist
             tracking_maps = tracking_latent_dist.sample().to(device=device, dtype=dtype)
 
-    base_prompt = args.base_prompt.strip()
+    foreground_prompt = args.foreground_prompt.strip()
     prompt = None
     if args.lighting_prompt and args.lighting_prompt.strip():
-        prompt = f"{base_prompt[:-1]}, {args.lighting_prompt.strip().lower()}"
+        prompt = f"{foreground_prompt[:-1]}, {args.lighting_prompt.strip().lower()}"
 
     output_root = Path(args.output_path)
     output_root.mkdir(parents=True, exist_ok=True)
@@ -223,7 +223,7 @@ def generate_video(
         bg_args = dict(pipeline_args)
         bg_args["control_video"] = foreground_frames
         bg_args["ref_image"] = ref_image
-        bg_args["prompt"] = prompt if prompt is not None else base_prompt
+        bg_args["prompt"] = prompt if prompt is not None else foreground_prompt
 
         if hdr_maps is not None:
             bg_args["hdr_maps"] = hdr_maps
@@ -253,7 +253,7 @@ def generate_video(
         # No-background generation only
         nobg_args = dict(pipeline_args)
         nobg_args["control_video"] = foreground_frames
-        nobg_args["prompt"] = prompt if prompt is not None else base_prompt
+        nobg_args["prompt"] = prompt if prompt is not None else foreground_prompt
 
         if hdr_maps is not None:
             nobg_args["hdr_maps"] = hdr_maps
@@ -288,7 +288,7 @@ def main():
         help="Path to the foreground video (or image).",
     )
     parser.add_argument(
-        "--base_prompt",
+        "--foreground_prompt",
         type=str,
         required=True,
         help="Foreground prompt text.",
