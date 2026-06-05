@@ -194,6 +194,24 @@ sample_nobg.mp4
 sample_nobg_concat.mp4     # foreground video | generated video
 ```
 
+## 🖥️ Gradio Demo
+
+IllumiCraft also provides an interactive Gradio demo for relighting custom videos and images.
+
+Before launching the demo, set the model paths in `run_gradio_demo.sh`:
+
+```bash
+WAN_MODEL_PATH="/path/to/Wan2.1-Fun-1.3B-Control"
+ILLUMICRAFT_CKPT_PATH="/path/to/illumicraft_pretrained_weights"
+```
+
+Then launch:
+
+```bash
+bash run_gradio_demo.sh
+```
+
+The demo includes preloaded examples from `demo/eval/`, which can be used directly or freely replaced with your own inputs.
 
 ### 🎭 Foreground Video Preparation
 
