@@ -173,8 +173,8 @@ def build_app():
            <div style="font-family: monospace;">
            Foreground video            : Foreground subject video with a uniform #888B88 gray background.<br>
            Foreground prompt           : Description of the foreground subject.<br>
+           Lighting prompt             : Description of the desired lighting effect.
            Background image (optional) : Reference image for relighting guidance.<br>
-           Lighting prompt (optional)  : Description of the desired lighting effect.
            </div>
         """)  
         with gr.Row():
@@ -196,7 +196,7 @@ def build_app():
             value="A majestic waterfall cascades down a rugged cliff into a serene pool.",
         )
         lighting_prompt = gr.Textbox(
-            label="Lighting prompt (optional)",
+            label="Lighting prompt",
             lines=3,
             value="Cool-blue spotlights beam through mist onto a central pool of light.",
         )
