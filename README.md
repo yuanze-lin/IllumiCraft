@@ -187,7 +187,7 @@ sample_bg.mp4
 sample_bg_concat.mp4       # foreground video | background | generated video
 ```
 
-For comparison, it also generates a result without background conditioning whhen there's no specified background:
+For comparison, it also generates a result without background conditioning:
 
 ```text
 sample_nobg.mp4
