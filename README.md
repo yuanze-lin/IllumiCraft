@@ -45,7 +45,7 @@ conda env update -n illumicraft -f environment.yml
 Download the IllumiCraft training dataset and demo examples:
 
 ```bash
-python download_illumicraft_dataset.py
+python utils/download_illumicraft_dataset.py
 ```
 
 The script will automatically download the dataset from Hugging Face and organize it into two parts, `train` and `demo_examples`, for **training** and **inference**, respectively:
@@ -80,7 +80,7 @@ Use `dataset/train/` as the `DATA_ROOT` in `train.sh` and `dataset/demo_examples
 Before running training and inference, download both the base **Wan2.1-Fun-1.3B-Control** model and the released **IllumiCraft** checkpoint:
 
 ```bash
-python download_weights.py
+python utils/download_weights.py
 ```
 
 The script will automatically download the checkpoints to:
