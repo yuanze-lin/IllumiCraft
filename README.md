@@ -157,7 +157,7 @@ Example configuration:
 export CUDA_VISIBLE_DEVICES=0
 
 WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"
-ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_checkpoint"
+ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_pretrained_weights"
 OUTPUT_PATH="demo/single_sample_outputs"
 
 FOREGROUND_VIDEO_PATH="demo/eval/foreground_videos_00000.mp4"
