@@ -172,7 +172,7 @@ python testing/inference_single_sample.py \
     --config_path config/wan.yaml \
     --model_path "$ILLUMICRAFT_CKPT_PATH" \
     --foreground_video_path "$FOREGROUND_VIDEO_PATH" \
-    --base_prompt "$FOREGROUND_PROMPT" \
+    --foreground_prompt "$FOREGROUND_PROMPT" \
     --lighting_prompt "$LIGHTING_PROMPT" \
     --output_path "$OUTPUT_PATH" \
     ${BACKGROUND_PATH:+--background_path "$BACKGROUND_PATH"}
