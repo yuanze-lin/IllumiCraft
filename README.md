@@ -226,35 +226,35 @@ We provide `foreground_video_example.py` as a reference script for generating fo
 ## 🎬 Sample Results
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/aeb594c5-c32b-4ffa-bcda-0723e7612187" />
 
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/14.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets14.gif)
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/372d8fec-db53-4c35-b668-76055472e96b"/>
 
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/2.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets2.gif)
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/8dfc7346-b322-48f5-82b3-fafaad513edd" />
 
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/4.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets4.gif)
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/a8e9f972-9b6d-4423-a90d-c7a88687d2dd" />
 
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/5.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets5.gif)
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/8c145d55-2b70-4582-8620-52bdfcec3c60" />
 
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/7.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets7.gif)
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/96c9fa52-2ed6-4658-99d7-13f8d55b040b" />
 
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/8.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets8.gif)
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/0d9e9040-0fa1-4412-a21b-7de593c7cf60" />
 
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/10.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets10.gif)
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/6500634d-e8a6-40d2-a090-38f40b014546" />
 
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/11.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets11.gif)
 
 <!-- <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/45fcec9b-ec34-40a5-8809-e261c79e48a1"/>
 
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/1.gif)
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets1.gif)
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/372d8fec-db53-4c35-b668-76055472e96b"/>
 
-![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/examples/3.gif) -->
+![image](https://github.com/yuanze-lin/IllumiCraft/blob/main/assets3.gif) -->
 
 ## ❓ FAQ
 
