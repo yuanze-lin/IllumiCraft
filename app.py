@@ -171,10 +171,10 @@ def build_app():
            ### Inputs
 
            <div style="font-family: monospace;">
-           <b>Foreground Video</b>            : Foreground subject video with a uniform #888B88 gray background.<br>
-           <b>Foreground Prompt</b>           : Description of the foreground subject.<br>
-           <b>Background Image (Optional)</b> : Reference image for relighting guidance.<br>
-           <b>Lighting Prompt (Optional)</b>  : Description of the desired lighting effect.
+           Foreground Video            : Foreground subject video with a uniform #888B88 gray background.<br>
+           Foreground Prompt           : Description of the foreground subject.<br>
+           Background Image (Optional) : Reference image for relighting guidance.<br>
+           Lighting Prompt (Optional)  : Description of the desired lighting effect.
            </div>
         """)  
         with gr.Row():
