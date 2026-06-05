@@ -151,7 +151,7 @@ def build_app():
             foreground_video=foreground_video,
             foreground_prompt=foreground_prompt,
             lighting_prompt=lighting_prompt,
-            background_file=background_image,
+            background_image=background_image,
             seed=seed,
             guidance_scale=args.guidance_scale,
             height=args.height,
