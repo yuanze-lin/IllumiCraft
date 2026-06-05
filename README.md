@@ -180,14 +180,14 @@ python testing/inference_single_sample.py \
 
 #### Outputs
 
-When a background image and lighting prompt are provided, IllumiCraft generates a background-conditioned result:
+When a background image and lighting prompt are provided, IllumiCraft generates background-conditioned results:
 
 ```text
 sample_bg.mp4
 sample_bg_concat.mp4       # foreground video | background | generated video
 ```
 
-For comparison, it also generates a result without background conditioning:
+For comparison, it also generates results without background conditioning:
 
 ```text
 sample_nobg.mp4
