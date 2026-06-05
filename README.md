@@ -178,7 +178,7 @@ python testing/inference_single_sample.py \
     ${BACKGROUND_PATH:+--background_path "$BACKGROUND_PATH"}
 ```
 
-### Outputs
+#### Outputs
 
 When a background image and lighting prompt are provided, IllumiCraft generates a background-conditioned result:
 
