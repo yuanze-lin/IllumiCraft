@@ -173,7 +173,7 @@ def build_app():
            <div style="font-family: monospace;">
            Foreground video            : Foreground subject video with a uniform #888B88 gray background.<br>
            Foreground prompt           : Description of the foreground subject.<br>
-           Lighting prompt             : Description of the desired lighting effect.
+           Lighting prompt             : Description of the desired lighting effect.<br>
            Background image (optional) : Reference image for relighting guidance.<br>
            </div>
         """)  
