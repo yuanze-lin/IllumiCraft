@@ -211,7 +211,7 @@ Then launch:
 bash run_gradio_demo.sh
 ```
 
-The demo includes preloaded examples from `demo/eval/`, which can be used directly or freely replaced with your own inputs.
+The demo includes preloaded examples from `demo/eval/`, which can be used directly or freely replaced with your own inputs. The IllumiCraft Gradio interface for video relighting is shown below
 
 <p align="center">
   <img src="demo/gradio.png" alt="Gradio Demo" width="100%">
