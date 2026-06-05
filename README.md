@@ -140,20 +140,6 @@ Launch inference:
 bash inference.sh
 ```
 
-#### Outputs
-
-By default, for each sample, IllumiCraft generates:
-
-```text
-sample_bg.mp4            # background-conditioned generation
-sample_bg_concat.mp4     # foreground video | background | generated video
-
-sample_nobg.mp4          # generation without background
-sample_nobg_concat.mp4   # foreground video | generated video
-```
-
-`background_images.txt` and `lighting_prompt.txt` are paired line-by-line. If they are not provided, only the no-background generation is produced.
-
 ### Single-sample inference
 
 For quick testing, IllumiCraft also supports direct inference on a single foreground video without requiring dataset text files.
@@ -192,17 +178,22 @@ python testing/inference_single_sample.py \
     ${BACKGROUND_PATH:+--background_path "$BACKGROUND_PATH"}
 ```
 
-#### Outputs
+### Outputs
+
+When a background image and lighting prompt are provided, IllumiCraft generates a background-conditioned result:
 
 ```text
-sample_bg.mp4            # background-conditioned generation (if enabled)
-sample_bg_concat.mp4     # foreground video | background | generated video
-
-sample_nobg.mp4          # generation without background conditioning
-sample_nobg_concat.mp4   # foreground video | generated video
+sample_bg.mp4
+sample_bg_concat.mp4       # foreground video | background | generated video
 ```
 
-`BACKGROUND_PATH` and `LIGHTING_PROMPT` are optional. When `BACKGROUND_PATH` is omitted, IllumiCraft automatically falls back to no-background video generation.
+For comparison, it also generates a result without background conditioning:
+
+```text
+sample_nobg.mp4
+sample_nobg_concat.mp4     # foreground video | generated video
+```
+```
 
 ### 🎭 Foreground Video Generation
 
