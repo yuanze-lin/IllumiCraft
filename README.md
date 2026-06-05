@@ -193,7 +193,7 @@ For comparison, it also generates a result without background conditioning:
 sample_nobg.mp4
 sample_nobg_concat.mp4     # foreground video | generated video
 ```
-```
+
 
 ### 🎭 Foreground Video Generation
 
