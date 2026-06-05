@@ -80,9 +80,6 @@ dependencies:
       - ftfy==6.3.1
       - gitdb==4.0.12
       - gitpython==3.1.44
-      - gradio==6.16.0
-      - gradio-client==2.5.0
-      - hf-gradio==0.4.1
       - hf-transfer==0.1.9
       - hjson==3.1.0
       - huggingface-hub==0.36.2
