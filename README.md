@@ -88,7 +88,7 @@ The script will automatically download the checkpoints to:
 ```text
 checkpoints/
 ├── Wan2.1-Fun-1.3B-Control/
-└── illumicraft_weights/
+└── illumicraft_pretrained_weights/
 ```
 
 After downloading, verify that the model paths in `inference.sh` are correctly configured:
