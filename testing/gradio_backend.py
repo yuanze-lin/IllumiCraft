@@ -78,7 +78,7 @@ def run_gradio_inference(
     foreground_video,
     foreground_prompt,
     lighting_prompt,
-    background_file,
+    background_image,
     seed,
     guidance_scale=6.0,
     height=480,
@@ -91,7 +91,7 @@ def run_gradio_inference(
     patch_inference_module()
 
     foreground_video = normalize_upload(foreground_video)
-    background_file = normalize_upload(background_file)
+    background_image = normalize_upload(background_image)
 
     if not foreground_video:
         raise ValueError("Foreground video is required.")
@@ -109,7 +109,7 @@ def run_gradio_inference(
         foreground_video_path=foreground_video,
         base_prompt=foreground_prompt.strip(),
         lighting_prompt=(lighting_prompt or "").strip() or None,
-        background_path=background_file,
+        background_path=background_image,
         tracking_path=None,
         hdr_path=None,
         pretrained_model_name_or_path=wan_model_path,
