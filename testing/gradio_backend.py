@@ -107,7 +107,7 @@ def run_gradio_inference(
     args = SimpleNamespace(
         config_path=config_path,
         foreground_video_path=foreground_video,
-        base_prompt=foreground_prompt.strip(),
+        foreground_prompt=foreground_prompt.strip(),
         lighting_prompt=(lighting_prompt or "").strip() or None,
         background_path=background_image,
         tracking_path=None,
