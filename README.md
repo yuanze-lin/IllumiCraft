@@ -156,8 +156,10 @@ Example configuration:
 #!/bin/bash
 export CUDA_VISIBLE_DEVICES=0
 
-WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"  # Set if not using our pretrained weights.
 ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_pretrained_weights"
+WAN_MODEL_PATH="${WAN_MODEL_PATH:-$ILLUMICRAFT_CKPT_PATH}"
+
+# WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"  # Set if not using our pretrained weights.
 OUTPUT_PATH="demo/single_sample_outputs"
 
 FOREGROUND_VIDEO_PATH="demo/eval/foreground_videos_00000.mp4"
