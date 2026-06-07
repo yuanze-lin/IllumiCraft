@@ -12,7 +12,7 @@ CAPTION_COLUMN="foreground_prompt.txt"
 FOREGROUND_COLUMN="foreground_videos.txt"
 
 # Optional: enable background-conditioned generation
-BACKGROUND_COLUMN=background.txt
+BACKGROUND_COLUMN="background.txt"
 LIGHT_CAPTION_COLUMN="lighting_prompt.txt"
 
 python testing/inference.py \
