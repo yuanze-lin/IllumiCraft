@@ -306,4 +306,4 @@ If you find IllumiCraft useful for your research, please consider citing:
 
 ## 🙏 Acknowledgement
 
-- **[Wan2.1](https://github.com/Wan-Video/Wan2.1):** IllumiCraft is built upon the Wan2.1 framework and uses **[Wan2.1-Fun-1.3B-Control](https://huggingface.co/alibaba-pai/Wan2.1-Fun-1.3B-Control)** as its foundation. We thank the Wan team for open-sourcing their codebase and pretrained models.
+- [Wan2.1](https://github.com/Wan-Video/Wan2.1): IllumiCraft is built upon the Wan2.1 framework and uses [Wan2.1-Fun-1.3B-Control](https://huggingface.co/alibaba-pai/Wan2.1-Fun-1.3B-Control) as its foundation. We thank the Wan team for open-sourcing their codebase and pretrained models.
