@@ -1,8 +1,10 @@
 #!/bin/bash
 export CUDA_VISIBLE_DEVICES=0
 
-WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"
 ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_pretrained_weights"
+WAN_MODEL_PATH="${WAN_MODEL_PATH:-$ILLUMICRAFT_CKPT_PATH}"
+
+# WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"  # Set if not using our pretrained weights.
 OUTPUT_PATH="demo/outputs"
 
 DATA_ROOT="dataset/demo_examples"
