@@ -206,8 +206,10 @@ IllumiCraft also provides an interactive Gradio demo for relighting custom video
 Before launching the demo, set the model paths in `run_gradio_demo.sh`:
 
 ```bash
-WAN_MODEL_PATH="/path/to/Wan2.1-Fun-1.3B-Control"
-ILLUMICRAFT_CKPT_PATH="/path/to/illumicraft_pretrained_weights"
+ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_pretrained_weights"
+WAN_MODEL_PATH="${WAN_MODEL_PATH:-$ILLUMICRAFT_CKPT_PATH}"
+
+# WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"  # Set if not using our pretrained weights.
 ```
 
 Then launch:
