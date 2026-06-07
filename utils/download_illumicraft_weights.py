@@ -12,17 +12,13 @@ snapshot_download(
 print("Downloaded to checkpoints/Wan2.1-Fun-1.3B-Control")
 
 dst = Path("checkpoints/illumicraft_pretrained_weights")
+
 snapshot_download(
     repo_id="YuanzeLin/Illumicraft-checkpoints",
     local_dir=dst,
-    allow_patterns="checkpoint/*",
+    local_dir_use_symlinks=False,
 )
 
-checkpoint_dir = dst / "checkpoint"
-
-for p in checkpoint_dir.iterdir():
-    shutil.move(str(p), str(dst / p.name))
-
-checkpoint_dir.rmdir()
+print(f"Downloaded to {dst}")
 
 print("Downloaded to checkpoints/illumicraft_weights")
