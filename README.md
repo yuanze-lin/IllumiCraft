@@ -116,7 +116,7 @@ Launch training:
 ```bash
 bash train.sh
 ```
-> **Note:** Training only updates and saves the IllumiCraft weights. The VAE, text encoder, CLIP image encoder, tokenizer, and other Wan 2.1 components remain frozen and are not included in the checkpoint. During inference, load your trained IllumiCraft weights together with the original Wan2.1-Fun-1.3B-Control model weights.
+> **Note:** To reduce storage requirements, this checkpoint contains only the trainable IllumiCraft weights. Frozen Wan2.1 components (e.g., VAE, text encoder, CLIP image encoder, and tokenizer) are not included and must be loaded from the original Wan2.1-Fun-1.3B-Control model during inference.
 
 ## 🎥 Inference
 
