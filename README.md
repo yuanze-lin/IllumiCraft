@@ -129,8 +129,10 @@ Run video generation using a trained IllumiCraft checkpoint.
 Edit the following fields in `inference.sh`:
 
 ```bash
-WAN_MODEL_PATH=/path/to/Wan2.1-Fun-1.3B-Control
-ILLUMICRAFT_CKPT_PATH=/path/to/illumicraft_pretrained_weights
+ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_pretrained_weights"
+WAN_MODEL_PATH="${WAN_MODEL_PATH:-$ILLUMICRAFT_CKPT_PATH}"
+
+# WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"  # Set if not using our pretrained weights.
 
 DATA_ROOT=/path/to/demo_examples
 ```
