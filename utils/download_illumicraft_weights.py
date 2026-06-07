@@ -19,6 +19,4 @@ snapshot_download(
     local_dir_use_symlinks=False,
 )
 
-print(f"Downloaded to {dst}")
-
 print("Downloaded to checkpoints/illumicraft_weights")
