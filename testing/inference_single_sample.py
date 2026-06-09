@@ -320,8 +320,8 @@ def main():
     parser.add_argument(
         "--pretrained_model_name_or_path",
         type=str,
-        required=True,
-        help="Path to Wan2.1-Fun-1.3B-Control.",
+        default=None,
+        help="Base Wan model. If omitted, load everything from model_path.",
     )
     parser.add_argument(
         "--model_path",
@@ -358,12 +358,16 @@ def main():
     device = "cuda" if torch.cuda.is_available() else "cpu"
     dtype = torch.float16 if args.dtype == "float16" else torch.bfloat16
     config = OmegaConf.load(args.config_path)
-
+    if args.pretrained_model_name_or_path is not None:
+        model_root = args.pretrained_model_name_or_path
+    else:
+        model_root = args.model_path
+        
     os.makedirs(args.output_path, exist_ok=True)
 
     tokenizer = AutoTokenizer.from_pretrained(
         os.path.join(
-            args.pretrained_model_name_or_path,
+            model_root,
             config["text_encoder_kwargs"].get("tokenizer_subpath", "tokenizer"),
         )
     )
@@ -374,7 +378,7 @@ def main():
 
     text_encoder = WanT5EncoderModel.from_pretrained(
         os.path.join(
-            args.pretrained_model_name_or_path,
+            model_root,
             config["text_encoder_kwargs"].get("text_encoder_subpath", "text_encoder"),
         ),
         additional_kwargs=OmegaConf.to_container(config["text_encoder_kwargs"]),
@@ -383,19 +387,19 @@ def main():
     )
 
     vae = AutoencoderKLWan.from_pretrained(
-        os.path.join(args.pretrained_model_name_or_path, config["vae_kwargs"].get("vae_subpath", "vae")),
+        os.path.join(model_root, config["vae_kwargs"].get("vae_subpath", "vae")),
         additional_kwargs=OmegaConf.to_container(config["vae_kwargs"]),
     )
 
     clip_image_encoder = CLIPModel.from_pretrained(
         os.path.join(
-            args.pretrained_model_name_or_path,
+            model_root,
             config["image_encoder_kwargs"].get("image_encoder_subpath", "image_encoder"),
         )
     )
 
     transformer = WanTransformer3DModelTracking.from_pretrained(
-        os.path.join(args.model_path, "transformer"),
+        os.path.join(model_root, "transformer"),
         transformer_additional_kwargs=OmegaConf.to_container(config["transformer_additional_kwargs"]),
     ).to(dtype)
 
