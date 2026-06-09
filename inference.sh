@@ -2,9 +2,6 @@
 export CUDA_VISIBLE_DEVICES=0
 
 ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_pretrained_weights"
-WAN_MODEL_PATH="${WAN_MODEL_PATH:-$ILLUMICRAFT_CKPT_PATH}"
-
-# WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"  # Set if not using our pretrained weights.
 OUTPUT_PATH="demo/outputs"
 
 DATA_ROOT="dataset/demo_examples"
@@ -16,7 +13,6 @@ BACKGROUND_COLUMN="background_images.txt"
 LIGHT_CAPTION_COLUMN="lighting_prompt.txt"
 
 python testing/inference.py \
-    --pretrained_model_name_or_path $WAN_MODEL_PATH \
     --data_root $DATA_ROOT \
     --config_path config/wan.yaml \
     --model_path $ILLUMICRAFT_CKPT_PATH \
