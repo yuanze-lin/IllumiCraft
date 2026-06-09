@@ -3,12 +3,8 @@ export CUDA_VISIBLE_DEVICES=0
 export PYTHONPATH=$(pwd):$PYTHONPATH
 
 ILLUMICRAFT_CKPT_PATH="checkpoints/illumicraft_pretrained_weights"
-WAN_MODEL_PATH="${WAN_MODEL_PATH:-$ILLUMICRAFT_CKPT_PATH}"
-
-# WAN_MODEL_PATH="checkpoints/Wan2.1-Fun-1.3B-Control"  # Set if not using our pretrained weights.
 
 python utils/app.py \
-  --wan_model_path "$WAN_MODEL_PATH" \
   --illumicraft_ckpt_path "$ILLUMICRAFT_CKPT_PATH" \
   --config_path config/wan.yaml \
   --output_dir ./gradio_outputs \
