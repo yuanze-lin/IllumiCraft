@@ -148,7 +148,8 @@ def build_app():
     def relight_video(foreground_video, foreground_prompt, lighting_prompt, background_image, seed):
         return run_gradio_inference(
             pipe=pipe,
-            ckpt_path=model_root,
+            wan_model_path=args.wan_model_path,
+            illumicraft_ckpt_path=args.illumicraft_ckpt_path,
             config_path=args.config_path,
             output_dir=str(output_dir),
             foreground_video=foreground_video,
