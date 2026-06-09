@@ -1,21 +1,31 @@
-import gc, os, cv2, inspect, sys
-import numpy as np 
+import gc
+import inspect
+import json
+import os
+import shutil
+import sys
+from pathlib import Path
 from typing import Optional, Tuple, Union
 
+import cv2
+import diffusers
+import numpy as np
 import torch
+from accelerate import DistributedType, init_empty_weights
 from accelerate.logging import get_logger
 from diffusers.models.embeddings import get_3d_rotary_pos_embed
+from diffusers.training_utils import cast_training_params
 from diffusers.utils.torch_utils import is_compiled_module
-from pathlib import Path
-from accelerate import DistributedType, init_empty_weights
-current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.join(current_dir, '..'))
-from models.illumicraft import WanImageToVideoPipelineTracking, WanTransformer3DModelTracking
 from omegaconf import OmegaConf
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.join(current_dir, ".."))
+from models.illumicraft import WanImageToVideoPipelineTracking, WanTransformer3DModelTracking
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.join(current_dir, ".."))
 
 logger = get_logger(__name__)
-
 
 def get_optimizer(
     params_to_optimize,
@@ -36,9 +46,10 @@ def get_optimizer(
     use_cpu_offload_optimizer: bool = False,
     offload_gradients: bool = False,
 ) -> torch.optim.Optimizer:
+    """Build the optimizer selected by the training arguments."""
     optimizer_name = optimizer_name.lower()
 
-    # Use DeepSpeed optimzer
+    # DeepSpeed provides its own optimizer wrapper, so we return a dummy optimizer here.
     if use_deepspeed:
         from accelerate.utils import DummyOptim
 
@@ -53,6 +64,7 @@ def get_optimizer(
     if use_8bit and use_4bit:
         raise ValueError("Cannot set both `use_8bit` and `use_4bit` to True.")
 
+    # torchao is required for low-bit CPU offload and torchao-backed 4-bit optimizers.
     if (use_torchao and (use_8bit or use_4bit)) or use_cpu_offload_optimizer:
         try:
             import torchao
@@ -66,7 +78,7 @@ def get_optimizer(
     if not use_torchao and use_4bit:
         raise ValueError("4-bit Optimizers are only supported with torchao.")
 
-    # Optimizer creation
+    # Normalize unsupported optimizer names to AdamW so training can continue.
     supported_optimizers = ["adam", "adamw", "prodigy", "came"]
     if optimizer_name not in supported_optimizers:
         logger.warning(
@@ -85,6 +97,7 @@ def get_optimizer(
                 "To use 8-bit Adam, please install the bitsandbytes library: `pip install bitsandbytes`."
             )
 
+    # Select the optimizer class and its constructor kwargs.
     if optimizer_name == "adamw":
         if use_torchao:
             from torchao.prototype.low_bit_optim import AdamW4bit, AdamW8bit
@@ -93,11 +106,7 @@ def get_optimizer(
         else:
             optimizer_class = bnb.optim.AdamW8bit if use_8bit else torch.optim.AdamW
 
-        init_kwargs = {
-            "betas": (beta1, beta2),
-            "eps": epsilon,
-            "weight_decay": weight_decay,
-        }
+        init_kwargs = {"betas": (beta1, beta2), "eps": epsilon, "weight_decay": weight_decay}
 
     elif optimizer_name == "adam":
         if use_torchao:
@@ -107,11 +116,7 @@ def get_optimizer(
         else:
             optimizer_class = bnb.optim.Adam8bit if use_8bit else torch.optim.Adam
 
-        init_kwargs = {
-            "betas": (beta1, beta2),
-            "eps": epsilon,
-            "weight_decay": weight_decay,
-        }
+        init_kwargs = {"betas": (beta1, beta2), "eps": epsilon, "weight_decay": weight_decay}
 
     elif optimizer_name == "prodigy":
         try:
@@ -144,14 +149,9 @@ def get_optimizer(
             raise ImportError("To use CAME, please install the came-pytorch library: `pip install came-pytorch`")
 
         optimizer_class = came_pytorch.CAME
+        init_kwargs = {"lr": learning_rate, "eps": (1e-30, 1e-16), "betas": (beta1, beta2, beta3), "weight_decay": weight_decay}
 
-        init_kwargs = {
-            "lr": learning_rate,
-            "eps": (1e-30, 1e-16),
-            "betas": (beta1, beta2, beta3),
-            "weight_decay": weight_decay,
-        }
-
+    # CPU offload wraps the underlying optimizer so gradients and states can live on host memory.
     if use_cpu_offload_optimizer:
         from torchao.prototype.low_bit_optim import CPUOffloadOptimizer
 
@@ -159,27 +159,29 @@ def get_optimizer(
             init_kwargs.update({"fused": True})
 
         optimizer = CPUOffloadOptimizer(
-            params_to_optimize, optimizer_class=optimizer_class, offload_gradients=offload_gradients, **init_kwargs
+            params_to_optimize,
+            optimizer_class=optimizer_class,
+            offload_gradients=offload_gradients,
+            **init_kwargs,
         )
     else:
         optimizer = optimizer_class(params_to_optimize, **init_kwargs)
 
     return optimizer
 
-
 def get_gradient_norm(parameters):
+    """Compute the global L2 norm of all available gradients."""
     norm = 0
     for param in parameters:
         if param.grad is None:
             continue
         local_norm = param.grad.detach().data.norm(2)
         norm += local_norm.item() ** 2
-    norm = norm**0.5
-    return norm
+    return norm**0.5
 
-
-# Similar to diffusers.pipelines.hunyuandit.pipeline_hunyuandit.get_resize_crop_region_for_grid
+# This follows the same crop logic used by Diffusers-style video grid preparation.
 def get_resize_crop_region_for_grid(src, tgt_width, tgt_height):
+    """Return the centered crop region after resizing a source grid to the target aspect ratio."""
     tw = tgt_width
     th = tgt_height
     h, w = src
@@ -196,7 +198,6 @@ def get_resize_crop_region_for_grid(src, tgt_width, tgt_height):
 
     return (crop_top, crop_left), (crop_top + resize_height, crop_left + resize_width)
 
-
 def prepare_rotary_positional_embeddings(
     height: int,
     width: int,
@@ -208,6 +209,7 @@ def prepare_rotary_positional_embeddings(
     base_height: int = 480,
     base_width: int = 720,
 ) -> Tuple[torch.Tensor, torch.Tensor]:
+    """Create 3D rotary embeddings for the current video resolution and frame count."""
     grid_height = height // (vae_scale_factor_spatial * patch_size)
     grid_width = width // (vae_scale_factor_spatial * patch_size)
     base_size_width = base_width // (vae_scale_factor_spatial * patch_size)
@@ -221,18 +223,17 @@ def prepare_rotary_positional_embeddings(
         temporal_size=num_frames,
     )
 
-    freqs_cos = freqs_cos.to(device=device)
-    freqs_sin = freqs_sin.to(device=device)
-    return freqs_cos, freqs_sin
+    return freqs_cos.to(device=device), freqs_sin.to(device=device)
 
 def reset_memory(device: Union[str, torch.device]) -> None:
+    """Release cached GPU memory and reset CUDA peak statistics."""
     gc.collect()
     torch.cuda.empty_cache()
     torch.cuda.reset_peak_memory_stats(device)
     torch.cuda.reset_accumulated_memory_stats(device)
 
-
 def print_memory(device: Union[str, torch.device]) -> None:
+    """Print current and peak CUDA memory usage in gigabytes."""
     memory_allocated = torch.cuda.memory_allocated(device) / 1024**3
     max_memory_allocated = torch.cuda.max_memory_allocated(device) / 1024**3
     max_memory_reserved = torch.cuda.max_memory_reserved(device) / 1024**3
@@ -240,16 +241,8 @@ def print_memory(device: Union[str, torch.device]) -> None:
     print(f"{max_memory_allocated=:.3f} GB")
     print(f"{max_memory_reserved=:.3f} GB")
 
-
 def _to_uint8_video(frames):
-    """
-    Convert a video tensor/array into uint8 frames with shape [F, H, W, C].
-    Accepts:
-      - torch.Tensor [1, C, F, H, W]
-      - torch.Tensor [C, F, H, W]
-      - torch.Tensor [F, H, W, C]
-      - np.ndarray with the same layouts
-    """
+    """Convert a tensor or NumPy array into uint8 video frames with layout [F, H, W, C]."""
     if isinstance(frames, torch.Tensor):
         frames = frames.detach().cpu()
         if frames.ndim == 5:
@@ -257,16 +250,15 @@ def _to_uint8_video(frames):
         if frames.ndim == 4 and frames.shape[0] in (1, 3):
             frames = frames.permute(1, 2, 3, 0)  # [F, H, W, C]
         frames = frames.float().numpy()
-
     elif isinstance(frames, np.ndarray):
         if frames.ndim == 5:
             frames = frames[0]
         if frames.ndim == 4 and frames.shape[0] in (1, 3):
             frames = np.transpose(frames, (1, 2, 3, 0))
-
     else:
         raise TypeError(f"Unsupported frames type: {type(frames)}")
 
+    # Normalize to [0, 255] uint8 when the input is floating-point video data.
     if frames.dtype != np.uint8:
         if frames.min() < 0.0 or frames.max() > 1.0:
             frames = frames * 0.5 + 0.5
@@ -275,6 +267,14 @@ def _to_uint8_video(frames):
 
     return frames
 
+def _resize_frames_to_match(seq, height, width):
+    """Resize each frame in a sequence to the requested spatial size."""
+    resized = []
+    for frame in seq:
+        if frame.shape[0] != height or frame.shape[1] != width:
+            frame = cv2.resize(frame, (width, height), interpolation=cv2.INTER_LINEAR)
+        resized.append(frame)
+    return np.stack(resized, axis=0)
 
 def save_side_by_side_video(
     foreground_frames,
@@ -283,16 +283,14 @@ def save_side_by_side_video(
     output_path,
     fps=24,
 ):
-    """
-    Save a video concatenating:
-      foreground | repeated background | output
-    """
+    """Save a three-panel comparison video: foreground, background, and generated output."""
     fg = _to_uint8_video(foreground_frames)
     bg = _to_uint8_video(background_image)
     out = _to_uint8_video(generated_video)
 
     num_frames = out.shape[0]
 
+    # Repeat the background or foreground so every panel has the same frame count.
     if bg.shape[0] == 1:
         bg = np.repeat(bg, num_frames, axis=0)
     elif bg.shape[0] != num_frames:
@@ -303,36 +301,26 @@ def save_side_by_side_video(
 
     # Resize everything to the output resolution if needed.
     h, w = out.shape[1], out.shape[2]
-
-    def _resize_seq(seq):
-        resized = []
-        for frame in seq:
-            if frame.shape[0] != h or frame.shape[1] != w:
-                frame = cv2.resize(frame, (w, h), interpolation=cv2.INTER_LINEAR)
-            resized.append(frame)
-        return np.stack(resized, axis=0)
-
-    fg = _resize_seq(fg)
-    bg = _resize_seq(bg)
-    out = _resize_seq(out)
+    fg = _resize_frames_to_match(fg, h, w)
+    bg = _resize_frames_to_match(bg, h, w)
+    out = _resize_frames_to_match(out, h, w)
 
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")
     writer = cv2.VideoWriter(output_path, fourcc, fps, (w * 3, h))
 
     for f, b, o in zip(fg, bg, out):
         concat = np.concatenate([f, b, o], axis=1)  # horizontal concat
-        concat_bgr = cv2.cvtColor(concat, cv2.COLOR_RGB2BGR)
-        writer.write(concat_bgr)
+        writer.write(cv2.cvtColor(concat, cv2.COLOR_RGB2BGR))
 
-    writer.release() 
-
+    writer.release()
 
 def save_side_by_side_foreground_generated_video(
     foreground_frames,
     generated_video,
     output_path,
-    fps=24
+    fps=24,
 ):
+    """Save a two-panel comparison video: foreground input and generated output."""
     fg = _to_uint8_video(foreground_frames)
     out = _to_uint8_video(generated_video)
 
@@ -344,17 +332,8 @@ def save_side_by_side_foreground_generated_video(
     out = out[:num_frames]
 
     h, w = out.shape[1], out.shape[2]
-
-    def _resize_seq(seq):
-        resized = []
-        for frame in seq:
-            if frame.shape[0] != h or frame.shape[1] != w:
-                frame = cv2.resize(frame, (w, h), interpolation=cv2.INTER_LINEAR)
-            resized.append(frame)
-        return np.stack(resized, axis=0)
-
-    fg = _resize_seq(fg)
-    out = _resize_seq(out)
+    fg = _resize_frames_to_match(fg, h, w)
+    out = _resize_frames_to_match(out, h, w)
 
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
 
@@ -362,13 +341,12 @@ def save_side_by_side_foreground_generated_video(
     writer = cv2.VideoWriter(output_path, fourcc, fps, (w * 2, h))
 
     for f, o in zip(fg, out):
-        concat = np.concatenate([f, o], axis=1)
-        writer.write(cv2.cvtColor(concat, cv2.COLOR_RGB2BGR))
+        writer.write(cv2.cvtColor(np.concatenate([f, o], axis=1), cv2.COLOR_RGB2BGR))
 
     writer.release()
 
-
 def move_model(model, device, dtype):
+    """Move a model to the target device, handling meta-initialized modules safely."""
     if any(param.device.type == "meta" for param in model.parameters()):
         model = model.to_empty(device=device)
         model = model.to(device, dtype=dtype)
@@ -377,48 +355,84 @@ def move_model(model, device, dtype):
     return model
 
 def unwrap_model(accelerator, model):
+    """Return the underlying model, unwrapping Accelerate and compiled-module wrappers."""
     model = accelerator.unwrap_model(model)
     model = model._orig_mod if is_compiled_module(model) else model
     return model
 
-def save_model_hook(accelerator, transformer, models, weights, output_dir):
-    if accelerator.is_main_process:
-        for model in models:
-            if isinstance(unwrap_model(accelerator, model), type(unwrap_model(accelerator, transformer))):
-                model = unwrap_model(accelerator, model)
-                model.save_pretrained(
-                    os.path.join(output_dir, "transformer"), safe_serialization=True, max_shard_size="5GB"
-                )
-            else:
-                raise ValueError(f"Unexpected save model: {model.__class__}")
+def _strip_prefix(state_dict, prefix="model."):
+    """Remove a common prefix from all keys in a state dict when one is present."""
+    if not state_dict:
+        return state_dict
+    if all(k.startswith(prefix) for k in state_dict.keys()):
+        return {k[len(prefix):]: v for k, v in state_dict.items()}
+    return state_dict
 
-            if weights:
-                weights.pop()
-
-def save_pipeline_hook(accelerator, transformer, vae, text_encoder, tokenizer, clip_image_encoder, scheduler, models, weights, output_dir):
+def save_model_hook(
+    accelerator,
+    transformer,
+    vae,
+    text_encoder,
+    tokenizer,
+    clip_image_encoder,
+    models,
+    weights,
+    output_dir,
+):
+    """Save the training checkpoint in the layout expected by the downstream pipeline."""
     if not accelerator.is_main_process:
         return
 
-    pipe = WanImageToVideoPipelineTracking(
-        vae=unwrap_model(accelerator, vae),
-        text_encoder=unwrap_model(accelerator, text_encoder),
-        tokenizer=tokenizer,
-        transformer=unwrap_model(accelerator, transformer),
-        scheduler=scheduler,
-        clip_image_encoder=unwrap_model(accelerator, clip_image_encoder),
-    )
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
 
-    pipe.save_pretrained(
-        os.path.join(output_dir, "pipeline"),
-        safe_serialization=True,
-        max_shard_size="5GB",
-    )
+    # Unwrap all distributed/compiled wrappers before saving.
+    transformer = unwrap_model(accelerator, transformer)
+    vae = unwrap_model(accelerator, vae)
+    text_encoder = unwrap_model(accelerator, text_encoder)
+    clip_image_encoder = unwrap_model(accelerator, clip_image_encoder)
 
+    transformer.save_pretrained(output_dir / "transformer", safe_serialization=True, max_shard_size="5GB")
+    shutil.copyfile(output_dir / "transformer" / "config.json", output_dir / "config.json")
+
+    # Save tokenizers under the same folder names expected by the model loader.
+    tokenizer.save_pretrained(output_dir / "google" / "umt5-xxl")
+    tokenizer.save_pretrained(output_dir / "xlm-roberta-large")
+
+    # Save raw weights in the filenames expected by the existing checkpoint format.
+    torch.save(text_encoder.state_dict(), output_dir / "models_t5_umt5-xxl-enc-bf16.pth")
+    torch.save(vae.state_dict(), output_dir / "Wan2.1_VAE.pth")
+
+    clip_state = _strip_prefix(clip_image_encoder.state_dict(), prefix="model.")
+    torch.save(clip_state, output_dir / "models_clip_open-clip-xlm-roberta-large-vit-huge-14.pth")
+
+    # Write small metadata files so the checkpoint can be reconstructed later.
+    configuration_json = {
+        "_class_name": "IllumiCraftCheckpoint",
+        "_diffusers_version": diffusers.__version__,
+    }
+    with open(output_dir / "configuration.json", "w", encoding="utf-8") as f:
+        json.dump(configuration_json, f, indent=2)
+
+    model_index_json = {
+        "_class_name": "WanImageToVideoPipelineTracking",
+        "_diffusers_version": diffusers.__version__,
+        "transformer": ["transformer", "WanTransformer3DModelTracking"],
+        "tokenizer": ["google/umt5-xxl", "AutoTokenizer"],
+        "tokenizer_2": ["xlm-roberta-large", "AutoTokenizer"],
+        "text_encoder": ["models_t5_umt5-xxl-enc-bf16.pth", "WanT5EncoderModel"],
+        "vae": ["Wan2.1_VAE.pth", "AutoencoderKLWan"],
+        "image_encoder": ["models_clip_open-clip-xlm-roberta-large-vit-huge-14.pth", "CLIPModel"],
+    }
+    with open(output_dir / "model_index.json", "w", encoding="utf-8") as f:
+        json.dump(model_index_json, f, indent=2)
+
+    # Consume the list so Accelerate's hook contract is satisfied.
     while weights:
         weights.pop()
 
-
 def load_model_hook(accelerator, transformer, args, config, load_dtype, models, input_dir):
+    """Restore the transformer checkpoint and reattach its config."""
     transformer_ = None
     init_under_meta = False
 
@@ -430,6 +444,7 @@ def load_model_hook(accelerator, transformer, args, config, load_dtype, models, 
             else:
                 raise ValueError(f"Unexpected save model: {unwrap_model(accelerator, model).__class__}")
     else:
+        # DeepSpeed restores the transformer under init_empty_weights so the module can be materialized later.
         with init_empty_weights():
             transformer_ = WanTransformer3DModelTracking.from_config(
                 args.pretrained_model_name_or_path, subfolder="transformer"
@@ -448,7 +463,6 @@ def load_model_hook(accelerator, transformer, args, config, load_dtype, models, 
     if args.mixed_precision == "fp16":
         cast_training_params([transformer_])
 
-
 def build_pipeline(
     args,
     accelerator,
@@ -461,16 +475,7 @@ def build_pipeline(
     vae=None,
     text_encoder=None,
 ):
-    if args.hdr_column is None:
-        return WanImageToVideoPipelineTracking.from_pretrained(
-            args.pretrained_model_name_or_path,
-            transformer=unwrap_model(accelerator, transformer),
-            scheduler=scheduler,
-            revision=args.revision,
-            variant=args.variant,
-            torch_dtype=weight_dtype,
-        )
-
+    """Build the inference pipeline used for validation and checkpoint sampling."""
     return WanImageToVideoPipelineTracking(
         vae=accelerator.unwrap_model(vae).to(weight_dtype),
         text_encoder=accelerator.unwrap_model(text_encoder),
@@ -479,5 +484,3 @@ def build_pipeline(
         scheduler=val_scheduler,
         clip_image_encoder=clip_image_encoder,
     )
-
-
