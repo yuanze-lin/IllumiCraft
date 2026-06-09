@@ -382,7 +382,7 @@ def main():
             config["text_encoder_kwargs"].get("text_encoder_subpath", "text_encoder"),
         ),
         additional_kwargs=OmegaConf.to_container(config["text_encoder_kwargs"]),
-        low_cpu_mem_usage=True,
+        low_cpu_mem_usage=False,
         torch_dtype=dtype,
     )
 
