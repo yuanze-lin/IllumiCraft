@@ -197,7 +197,6 @@ def log_validation(
     pipeline_args["hdr_maps"] = hdr_maps
     pipeline_args["tracking_maps"] = tracking_maps
     pipeline_args["control_video"] = foreground_frames
-    pipeline_args["background_maps"] = background_frames
 
     generator = torch.Generator(device=accelerator.device).manual_seed(args.seed) if args.seed else None
 
