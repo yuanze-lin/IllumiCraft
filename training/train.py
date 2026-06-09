@@ -197,6 +197,7 @@ def log_validation(
     pipeline_args["hdr_maps"] = hdr_maps
     pipeline_args["tracking_maps"] = tracking_maps
     pipeline_args["control_video"] = foreground_frames
+    pipeline_args["ref_image"] = background_frames
 
     generator = torch.Generator(device=accelerator.device).manual_seed(args.seed) if args.seed else None
 
@@ -1002,79 +1003,8 @@ def main(args):
             del pipe
         else:
             del text_encoder, vae, pipe
-
         gc.collect()
         torch.cuda.empty_cache()
-        torch.cuda.synchronize(accelerator.device)
-
-        accelerator.print("===== Memory before testing =====")
-        print_memory(accelerator.device)
-        reset_memory(accelerator.device)
-
-        if args.hdr_column is None:
-            pipe = WanImageToVideoPipelineTracking.from_pretrained(
-                args.pretrained_model_name_or_path,
-                transformer=unwrap_model(transformer),
-                scheduler=scheduler,
-                revision=args.revision,
-                variant=args.variant,
-                torch_dtype=weight_dtype,
-            )
-        else:
-            pipe = WanImageToVideoPipelineTracking(
-                vae=accelerator.unwrap_model(vae).to(weight_dtype),
-                text_encoder=accelerator.unwrap_model(text_encoder),
-                tokenizer=tokenizer,
-                transformer=accelerator.unwrap_model(transformer),
-                scheduler=val_scheduler,
-                clip_image_encoder=clip_image_encoder,
-            )
-
-        pipe.scheduler = pipe.scheduler
-        if args.enable_model_cpu_offload:
-            pipe.enable_model_cpu_offload()
-
-        validation_outputs = []
-        if args.validation_prompt and args.num_validation_videos > 0:
-            validation_prompts = args.validation_prompt.split(args.validation_prompt_separator)
-            validation_videos = args.validation_images.split(args.validation_prompt_separator)
-            validation_backgrounds = args.validation_backgrounds.split(args.validation_prompt_separator)
-
-            for validation_video, validation_background, validation_prompt in zip(
-                validation_videos, validation_backgrounds, validation_prompts
-            ):
-                pipeline_args = {
-                    "foreground_map_path": validation_video,
-                    "background_map_path": validation_background,
-                    "prompt": validation_prompt,
-                    "negative_prompt": "The video is not of a high quality, it has a low resolution. Watermark present in each frame. The background is solid. Strange body and strange trajectory. Distortion.",
-                    "guidance_scale": args.guidance_scale,
-                    "height": args.height,
-                    "width": args.width,
-                    "max_sequence_length": 512,
-                }
-
-                if args.hdr_column is not None:
-                    pipeline_args["hdr_map_path"] = args.hdr_map_path
-
-                if args.tracking_column is not None:
-                    pipeline_args["tracking_map_path"] = args.tracking_map_path
-
-                video = log_validation(
-                    accelerator=accelerator,
-                    pipe=pipe,
-                    vae=pipe.vae,
-                    dataset=train_dataset,
-                    args=args,
-                    pipeline_args=pipeline_args,
-                    epoch=(epoch + 1),
-                    is_final_validation=True,
-                )
-                validation_outputs.extend(video)
-
-        accelerator.print("===== Memory after testing =====")
-        print_memory(accelerator.device)
-        reset_memory(accelerator.device)
         torch.cuda.synchronize(accelerator.device)
 
     accelerator.end_training()
