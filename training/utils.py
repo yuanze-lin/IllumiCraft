@@ -395,7 +395,7 @@ def save_model_hook(accelerator, transformer, models, weights, output_dir):
             if weights:
                 weights.pop()
 
-def save_model_hook(accelerator, transformer, vae, text_encoder, tokenizer, clip_image_encoder, scheduler, models, weights, output_dir):
+def save_pipeline_hook(accelerator, transformer, vae, text_encoder, tokenizer, clip_image_encoder, scheduler, models, weights, output_dir):
     if not accelerator.is_main_process:
         return
 
