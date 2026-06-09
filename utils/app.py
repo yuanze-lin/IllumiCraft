@@ -18,7 +18,7 @@ from testing.gradio_backend import run_gradio_inference
 def parse_args():
     parser = argparse.ArgumentParser(description="IllumiCraft local Gradio demo")
 
-    parser.add_argument("--wan_model_path", type=str, required=True)
+    parser.add_argument("--wan_model_path", type=str, default=None)
     parser.add_argument("--illumicraft_ckpt_path", type=str, required=True)
     parser.add_argument("--config_path", type=str, default="config/wan.yaml")
     parser.add_argument("--output_dir", type=str, default="./outputs")
@@ -59,12 +59,12 @@ def get_device_and_dtype():
     return device, dtype
 
 
-def load_pipeline(wan_model_path, illumicraft_ckpt_path, config_path, device, dtype):
+def load_pipeline(ckpt_path, config_path, device, dtype):
     config = OmegaConf.load(config_path)
 
     tokenizer = AutoTokenizer.from_pretrained(
         os.path.join(
-            wan_model_path,
+            ckpt_path,
             config["text_encoder_kwargs"].get("tokenizer_subpath", "tokenizer"),
         )
     )
@@ -78,17 +78,17 @@ def load_pipeline(wan_model_path, illumicraft_ckpt_path, config_path, device, dt
 
     text_encoder = WanT5EncoderModel.from_pretrained(
         os.path.join(
-            wan_model_path,
+            ckpt_path,
             config["text_encoder_kwargs"].get("text_encoder_subpath", "text_encoder"),
         ),
         additional_kwargs=OmegaConf.to_container(config["text_encoder_kwargs"]),
-        low_cpu_mem_usage=True,
+        low_cpu_mem_usage=False,
         torch_dtype=dtype,
     )
 
     vae = AutoencoderKLWan.from_pretrained(
         os.path.join(
-            wan_model_path,
+            ckpt_path,
             config["vae_kwargs"].get("vae_subpath", "vae"),
         ),
         additional_kwargs=OmegaConf.to_container(config["vae_kwargs"]),
@@ -96,13 +96,13 @@ def load_pipeline(wan_model_path, illumicraft_ckpt_path, config_path, device, dt
 
     clip_image_encoder = CLIPModel.from_pretrained(
         os.path.join(
-            wan_model_path,
+            ckpt_path,
             config["image_encoder_kwargs"].get("image_encoder_subpath", "image_encoder"),
         )
     )
 
     transformer = WanTransformer3DModelTracking.from_pretrained(
-        os.path.join(illumicraft_ckpt_path, "transformer"),
+        os.path.join(ckpt_path, "transformer"),
         transformer_additional_kwargs=OmegaConf.to_container(
             config["transformer_additional_kwargs"]
         ),
@@ -133,9 +133,13 @@ def build_app():
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    if args.illumicraft_ckpt_path is not None:
+        model_root = args.illumicraft_ckpt_path
+    else:
+        model_root = args.wan_model_path
+        
     config, pipe = load_pipeline(
-        wan_model_path=args.wan_model_path,
-        illumicraft_ckpt_path=args.illumicraft_ckpt_path,
+        ckpt_path=model_root,
         config_path=args.config_path,
         device=device,
         dtype=dtype,
@@ -144,8 +148,7 @@ def build_app():
     def relight_video(foreground_video, foreground_prompt, lighting_prompt, background_image, seed):
         return run_gradio_inference(
             pipe=pipe,
-            wan_model_path=args.wan_model_path,
-            illumicraft_ckpt_path=args.illumicraft_ckpt_path,
+            ckpt_path=model_root,
             config_path=args.config_path,
             output_dir=str(output_dir),
             foreground_video=foreground_video,
