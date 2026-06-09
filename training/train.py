@@ -870,7 +870,7 @@ def main(args):
     accelerator.wait_for_everyone()
 
     if accelerator.is_main_process:
-        transformer = unwrap_model(transformer).to(
+        transformer = unwrap_model(accelerator, transformer).to(
             dtype=(
                 torch.float16
                 if args.mixed_precision == "fp16"
