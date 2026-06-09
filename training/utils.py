@@ -401,7 +401,8 @@ def save_model_hook(
 
     # Save raw weights in the filenames expected by the existing checkpoint format.
     torch.save(text_encoder.state_dict(), output_dir / "models_t5_umt5-xxl-enc-bf16.pth")
-    torch.save(vae.state_dict(), output_dir / "Wan2.1_VAE.pth")
+    clip_state = _strip_prefix(clip_image_encoder.state_dict(), prefix="model.")
+    torch.save(clip_state, output_dir / "Wan2.1_VAE.pth")
 
     clip_state = _strip_prefix(clip_image_encoder.state_dict(), prefix="model.")
     torch.save(clip_state, output_dir / "models_clip_open-clip-xlm-roberta-large-vit-huge-14.pth")
