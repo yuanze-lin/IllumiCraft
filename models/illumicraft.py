@@ -545,7 +545,6 @@ class WanImageToVideoPipelineTracking(WanFunControlPipeline):
         comfyui_progressbar: bool = False,
         hdr_maps: Optional[torch.Tensor] = None,
         tracking_maps: Optional[torch.Tensor] = None,
-        foreground_maps: Optional[torch.Tensor] = None,
     ) -> Union[WanPipelineOutput, Tuple]:
         if isinstance(callback_on_step_end, (PipelineCallback, MultiPipelineCallbacks)):
             callback_on_step_end_tensor_inputs = callback_on_step_end.tensor_inputs
