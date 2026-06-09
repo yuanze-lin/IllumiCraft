@@ -131,7 +131,6 @@ class WanTransformer3DModelTracking(WanTransformer3DModel, ModelMixin):
         for param in self.motion_encoder.parameters():
             param.requires_grad = True
 
-        #self.hdr_default_tokens = nn.Parameter(torch.zeros(1, self.light_token_num, prompt_dim))
         self.hdr_default_tokens = nn.Parameter(torch.zeros(self.light_token_num, prompt_dim))
 
         nn.init.normal_(self.hdr_default_tokens, mean=0.0, std=1e-2)
