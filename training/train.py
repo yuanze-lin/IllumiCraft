@@ -719,7 +719,7 @@ def main(args):
                 indices = idx_sampling(batch_size, generator=torch_rng, device=accelerator.device).long().cpu()
                 timesteps = scheduler.timesteps[indices].to(device=accelerator.device)
 
-                                # Map sampled timesteps to their matching sigma values for the flow-matching objective.
+                # Map sampled timesteps to their matching sigma values for the flow-matching objective.
                 def get_sigmas(timesteps, n_dim=4, dtype=torch.float32):
                     sigmas = scheduler.sigmas.to(device=accelerator.device, dtype=dtype)
                     schedule_timesteps = scheduler.timesteps.to(accelerator.device)
