@@ -124,7 +124,7 @@ bash train.sh
 
 IllumiCraft supports both **dataset-style inference** and **single-sample inference**.
 
-Both accept either an already-prepared gray-background foreground video or a raw RGB video that is converted into one on the fly — via [SAM3](https://github.com/facebookresearch/sam3) (text-prompted segmentation of the first frame) + [MatAnyone](https://github.com/pq-yang/MatAnyone) (video matting), composited onto a fixed gray background (implemented in `utils/prepare_foreground_video.py`). To use the raw-video path, first download the SAM3 checkpoint into `checkpoints/sam3` (`[facebook/sam3](https://huggingface.co/facebook/sam3)` on Hugging Face — access may need to be requested); MatAnyone's weights download automatically on first use. 
+Both accept either an already-prepared gray-background foreground video or a raw RGB video that is converted into one on the fly — via [SAM3](https://github.com/facebookresearch/sam3) (text-prompted segmentation of the first frame) + [MatAnyone](https://github.com/pq-yang/MatAnyone) (video matting), composited onto a fixed gray background (implemented in `utils/prepare_foreground_video.py`). To use the raw-video path, first download the SAM3 checkpoint into `checkpoints/sam3` ([facebook/sam3](https://huggingface.co/facebook/sam3) on Hugging Face — access may need to be requested); MatAnyone's weights download automatically on first use. 
 
 ### Dataset-style inference
 
