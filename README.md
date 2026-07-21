@@ -141,7 +141,7 @@ Launch inference:
 bash inference.sh
 ```
 
-#### Auto-generating foreground videos from raw input videos
+#### Inference directly from raw input videos (dataset-style)
 
 To skip preparing foreground videos yourself, add `--input_video_column` (a txt file of raw input video paths, parallel to `--foreground_column`). For any row whose `--foreground_column` entry is missing or doesn't resolve to an existing file, the foreground video is auto-generated from the corresponding raw input video via SAM3 + MatAnyone (see [Foreground Video Preparation](#-foreground-video-preparation) for the SAM3 checkpoint setup) and cached under `<DATA_ROOT>/generated_foreground_videos/`:
 
@@ -193,7 +193,7 @@ python testing/inference_single_sample.py \
     ${BACKGROUND_PATH:+--background_path "$BACKGROUND_PATH"}
 ```
 
-#### Auto-generating the foreground video from a raw input video
+#### Inference directly from a raw input video
 
 If you don't already have a prepared (gray-background) foreground video, pass a raw input video via `--input_video_path` instead of `--foreground_video_path`. The foreground video is then extracted automatically with SAM3 (text-prompted segmentation on the first frame, using `--foreground_prompt` as the text prompt) + MatAnyone (video matting), and composited onto the same fixed gray background used elsewhere in the pipeline (see [Foreground Video Preparation](#-foreground-video-preparation) for the SAM3 checkpoint setup):
 
