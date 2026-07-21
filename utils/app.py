@@ -4,6 +4,13 @@ from pathlib import Path
 
 import gradio as gr
 import torch
+
+# transformers>=5 dropped Flax support and removed the legacy FLAX_WEIGHTS_NAME
+# constant that diffusers==0.34.0 still imports; restore it before importing diffusers.
+import transformers.utils as _tu
+if not hasattr(_tu, "FLAX_WEIGHTS_NAME"):
+    _tu.FLAX_WEIGHTS_NAME = "flax_model.msgpack"
+
 from diffusers import FlowMatchEulerDiscreteScheduler
 from omegaconf import OmegaConf
 from transformers import AutoTokenizer

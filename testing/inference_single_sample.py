@@ -13,6 +13,12 @@ from typing import Any, Dict, Union, Optional
 
 import torch.nn.functional as F
 
+# transformers>=5 dropped Flax support and removed the legacy FLAX_WEIGHTS_NAME
+# constant that diffusers==0.34.0 still imports; restore it before importing diffusers.
+import transformers.utils as _tu
+if not hasattr(_tu, "FLAX_WEIGHTS_NAME"):
+    _tu.FLAX_WEIGHTS_NAME = "flax_model.msgpack"
+
 from diffusers import (
     FlowMatchEulerDiscreteScheduler,
     WanPipeline,
@@ -364,10 +370,8 @@ def main():
         help="Foreground prompt text. Also used as the SAM3 text prompt when "
         "auto-generating the foreground video from --input_video_path.",
     )
-    parser.add_argument("--fgprep_python", type=str, default=None, help="Python interpreter of the fgprep conda env (SAM3 + MatAnyone).")
-    parser.add_argument("--fgprep_script", type=str, default=None, help="Path to utils/prepare_foreground_video.py.")
-    parser.add_argument("--sam3_model_path", type=str, default=None, help="Path/repo id of the SAM3 checkpoint (fgprep env).")
-    parser.add_argument("--matanyone_model", type=str, default=None, help="MatAnyone model repo id (fgprep env).")
+    parser.add_argument("--sam3_model_path", type=str, default=None, help="Path/repo id of the SAM3 checkpoint used for foreground extraction.")
+    parser.add_argument("--matanyone_model", type=str, default=None, help="MatAnyone model repo id used for foreground extraction.")
     parser.add_argument("--fgprep_score_threshold", type=float, default=0.4, help="SAM3 detection score threshold.")
     parser.add_argument(
         "--lighting_prompt",
@@ -453,8 +457,6 @@ def main():
         foreground_video_path=args.foreground_video_path,
         foreground_prompt=args.foreground_prompt,
         output_dir=args.output_path,
-        fgprep_python=args.fgprep_python,
-        fgprep_script=args.fgprep_script,
         sam3_model_path=args.sam3_model_path,
         matanyone_model=args.matanyone_model,
         score_threshold=args.fgprep_score_threshold,

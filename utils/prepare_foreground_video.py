@@ -11,9 +11,9 @@ pipeline:
      gray background (136, 139, 136) used by IllumiCraft's own reference
      script (utils/generate_foreground_video_example.py).
 
-Runs inside the `fgprep` conda env (needs a recent `transformers` for SAM3 and
-the `matanyone` package) -- kept separate from the `illumicraft` env, which
-pins an older `transformers` for its own custom modeling code.
+Usable both as a CLI and as a library: `prepare_foreground_video(...)` runs the
+whole pipeline in-process, which is how the inference scripts auto-generate a
+foreground video from `--input_video_path`.
 """
 
 import argparse
@@ -133,6 +133,48 @@ def composite_gray_background(video_path, alpha_video_path, out_path):
     return out_path
 
 
+def prepare_foreground_video(
+    video_path,
+    text_prompt,
+    output_path,
+    sam3_model_path="checkpoints/sam3",
+    matanyone_model="PeiqingYang/MatAnyone",
+    score_threshold=0.4,
+    work_dir=None,
+    device=None,
+):
+    """Run the full SAM3 seed mask + MatAnyone matting + gray composite pipeline.
+
+    Returns the path to the written gray-background foreground video.
+    """
+    device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+
+    cleanup_work_dir = work_dir is None
+    work_dir = Path(work_dir) if work_dir else Path(tempfile.mkdtemp(prefix="illumicraft_fgprep_"))
+    work_dir.mkdir(parents=True, exist_ok=True)
+
+    try:
+        print(f"[prepare_foreground_video] Reading first frame of {video_path}")
+        frame_rgb = read_first_frame(video_path)
+
+        print(f"[prepare_foreground_video] Running SAM3 with text_prompt={text_prompt!r}")
+        seed_mask = compute_seed_mask(frame_rgb, text_prompt, sam3_model_path, score_threshold, device)
+        seed_mask_path = work_dir / "seed_mask.png"
+        cv2.imwrite(str(seed_mask_path), seed_mask)
+
+        print("[prepare_foreground_video] Running MatAnyone video matting")
+        _, alpha_path = run_matanyone(video_path, seed_mask_path, work_dir, matanyone_model)
+
+        print(f"[prepare_foreground_video] Compositing onto gray background -> {output_path}")
+        composite_gray_background(video_path, alpha_path, output_path)
+
+        print(f"[prepare_foreground_video] Done: {output_path}")
+        return str(output_path)
+    finally:
+        if cleanup_work_dir:
+            shutil.rmtree(work_dir, ignore_errors=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Prepare a foreground video (SAM3 seed mask + MatAnyone matting).")
     parser.add_argument("--video_path", type=str, required=True, help="Raw input video with a real background.")
@@ -144,33 +186,15 @@ def main():
     parser.add_argument("--work_dir", type=str, default=None, help="Scratch dir for intermediate mask/matte files (defaults to a temp dir).")
     args = parser.parse_args()
 
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-
-    cleanup_work_dir = args.work_dir is None
-    work_dir = Path(args.work_dir) if args.work_dir else Path(tempfile.mkdtemp(prefix="illumicraft_fgprep_"))
-    work_dir.mkdir(parents=True, exist_ok=True)
-
-    try:
-        print(f"[prepare_foreground_video] Reading first frame of {args.video_path}")
-        frame_rgb = read_first_frame(args.video_path)
-
-        print(f"[prepare_foreground_video] Running SAM3 with text_prompt={args.text_prompt!r}")
-        seed_mask = compute_seed_mask(
-            frame_rgb, args.text_prompt, args.sam3_model_path, args.score_threshold, device
-        )
-        seed_mask_path = work_dir / "seed_mask.png"
-        cv2.imwrite(str(seed_mask_path), seed_mask)
-
-        print("[prepare_foreground_video] Running MatAnyone video matting")
-        _, alpha_path = run_matanyone(args.video_path, seed_mask_path, work_dir, args.matanyone_model)
-
-        print(f"[prepare_foreground_video] Compositing onto gray background -> {args.output_path}")
-        composite_gray_background(args.video_path, alpha_path, args.output_path)
-
-        print(f"[prepare_foreground_video] Done: {args.output_path}")
-    finally:
-        if cleanup_work_dir:
-            shutil.rmtree(work_dir, ignore_errors=True)
+    prepare_foreground_video(
+        video_path=args.video_path,
+        text_prompt=args.text_prompt,
+        output_path=args.output_path,
+        sam3_model_path=args.sam3_model_path,
+        matanyone_model=args.matanyone_model,
+        score_threshold=args.score_threshold,
+        work_dir=args.work_dir,
+    )
 
 
 if __name__ == "__main__":

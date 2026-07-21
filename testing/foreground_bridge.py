@@ -1,40 +1,16 @@
 """Bridge to auto-generate a foreground video from a raw input video.
 
-`utils/prepare_foreground_video.py` needs a recent `transformers` (for SAM3)
-and lives in the separate `fgprep` conda env, while the inference scripts run
-in the `illumicraft` env (pinned to an older `transformers`). This module
-shells out across that env boundary so callers still only need one command.
+Wraps `utils/prepare_foreground_video.py` so the inference scripts can turn a
+raw `--input_video_path` into the gray-background foreground video they expect,
+running SAM3 + MatAnyone in-process (single `illumicraft` env).
 """
 
 import os
-import subprocess
+import sys
 from pathlib import Path
 
 TESTING_DIR = Path(__file__).resolve().parent
 REPO_ROOT = TESTING_DIR.parent
-
-
-def _default_fgprep_python():
-    """Best-effort path to the `fgprep` conda env's interpreter.
-
-    Assumes `fgprep` was created the same way as `illumicraft` -- a named env
-    (`conda create -n fgprep ...`, see README) under the same conda
-    installation -- i.e. `$(conda info --base)/envs/fgprep/bin/python`.
-    Returns None if it can't be resolved or doesn't exist, so callers with a
-    non-standard layout (e.g. `conda create --prefix`) are forced to pass
-    --fgprep_python / FGPREP_PYTHON explicitly instead of silently getting a
-    wrong path.
-    """
-    conda_exe = os.environ.get("CONDA_EXE")
-    if not conda_exe:
-        return None
-    conda_base = Path(conda_exe).resolve().parent.parent
-    candidate = conda_base / "envs" / "fgprep" / "bin" / "python"
-    return str(candidate) if candidate.exists() else None
-
-
-DEFAULT_FGPREP_PYTHON = _default_fgprep_python()
-DEFAULT_FGPREP_SCRIPT = str(REPO_ROOT / "utils" / "prepare_foreground_video.py")
 
 
 def ensure_foreground_video(
@@ -42,8 +18,6 @@ def ensure_foreground_video(
     foreground_video_path=None,
     foreground_prompt=None,
     output_dir=".",
-    fgprep_python=None,
-    fgprep_script=None,
     sam3_model_path=None,
     matanyone_model=None,
     score_threshold=0.4,
@@ -69,16 +43,6 @@ def ensure_foreground_video(
             "via SAM3 + MatAnyone when only --input_video_path is given."
         )
 
-    fgprep_python = fgprep_python or os.environ.get("FGPREP_PYTHON") or DEFAULT_FGPREP_PYTHON
-    fgprep_script = fgprep_script or os.environ.get("FGPREP_SCRIPT", DEFAULT_FGPREP_SCRIPT)
-
-    if not fgprep_python:
-        raise ValueError(
-            "Could not locate the `fgprep` conda env's interpreter. Pass --fgprep_python "
-            "explicitly, set FGPREP_PYTHON, or create the env as `conda create -n fgprep ...` "
-            "(see README's Foreground Video Preparation section)."
-        )
-
     cache_dir = Path(output_dir) / "generated_foreground_videos"
     cache_dir.mkdir(parents=True, exist_ok=True)
     target_path = cache_dir / f"{Path(input_video_path).stem}_foreground.mp4"
@@ -87,31 +51,23 @@ def ensure_foreground_video(
         print(f"[foreground_bridge] Using cached foreground video: {target_path}")
         return str(target_path)
 
-    cmd = [
-        fgprep_python,
-        fgprep_script,
-        "--video_path", str(input_video_path),
-        "--text_prompt", foreground_prompt,
-        "--output_path", str(target_path),
-        "--score_threshold", str(score_threshold),
-    ]
+    if str(REPO_ROOT / "utils") not in sys.path:
+        sys.path.insert(0, str(REPO_ROOT / "utils"))
+    from prepare_foreground_video import prepare_foreground_video
+
+    kwargs = dict(
+        video_path=str(input_video_path),
+        text_prompt=foreground_prompt,
+        output_path=str(target_path),
+        score_threshold=score_threshold,
+    )
     if sam3_model_path:
-        cmd += ["--sam3_model_path", sam3_model_path]
+        kwargs["sam3_model_path"] = sam3_model_path
     if matanyone_model:
-        cmd += ["--matanyone_model", matanyone_model]
+        kwargs["matanyone_model"] = matanyone_model
 
-    # The illumicraft env's own imports (torch/diffusers/transformers) mutate
-    # os.environ as a side effect (e.g. TORCH_LOGS='', TORCHDYNAMO_VERBOSE='0').
-    # The fgprep env runs a different torch version and mishandles those
-    # inherited values, so strip anything torch/dynamo-internal before exec.
-    env = {
-        k: v
-        for k, v in os.environ.items()
-        if not k.startswith(("TORCH_", "TORCHDYNAMO_", "TORCHINDUCTOR_"))
-    }
-
-    print(f"[foreground_bridge] Extracting foreground video: {' '.join(cmd)}")
-    subprocess.run(cmd, check=True, env=env)
+    print(f"[foreground_bridge] Extracting foreground video -> {target_path}")
+    prepare_foreground_video(**kwargs)
 
     if not target_path.exists():
         raise RuntimeError(f"Foreground extraction did not produce {target_path}")
