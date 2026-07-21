@@ -176,10 +176,10 @@ python testing/inference_single_sample.py \
 
 #### Auto-generating the foreground video from a raw input video
 
-If you don't already have a prepared (gray-background) foreground video, pass a raw input video via `--input_video_path` instead of `--foreground_video_path`. The foreground video is then extracted automatically with SAM3 (text-prompted segmentation on the first frame, using `--foreground_prompt` as the text prompt) + MatAnyone (video matting), and composited onto the same fixed gray background used elsewhere in the pipeline. This runs in a separate conda env (SAM3 + MatAnyone need a newer `transformers` than the one IllumiCraft itself pins), reached via `--fgprep_python`/`--fgprep_script` (see `inference_single_sample_from_video.sh`, which defaults these to a sibling `../conda_envs/fgprep` env):
+If you don't already have a prepared (gray-background) foreground video, pass a raw input video via `--input_video_path` instead of `--foreground_video_path`. The foreground video is then extracted automatically with SAM3 (text-prompted segmentation on the first frame, using `--foreground_prompt` as the text prompt) + MatAnyone (video matting), and composited onto the same fixed gray background used elsewhere in the pipeline. This runs in a separate conda env (SAM3 + MatAnyone need a newer `transformers` than the one IllumiCraft itself pins — see [Foreground Video Preparation](#-foreground-video-preparation) for how to set it up), reached via `--fgprep_python`/`--fgprep_script` (auto-detected by default; override if needed — see below):
 
 ```bash
-bash inference_single_sample_from_video.sh
+bash inference_single_sample_from_original_video.sh
 ```
 
 This example config auto-generates its foreground video from `demo/eval/00000.mp4` (with `demo/eval/custom_background.jpg` as the background image) — the same raw clip used elsewhere in `demo/eval/`.
@@ -229,8 +229,26 @@ The demo includes preloaded examples from `demo/eval/`, which can be used direct
 
 ## 🎭 Foreground Video Preparation
 
-We provide `utils/prepare_foreground_video.py` automates this end-to-end with [SAM3](https://github.com/facebookresearch/sam3) (text-prompted segmentation of the first frame) + [MatAnyone](https://github.com/pq-yang/MatAnyone) (video matting) — this is what `--input_video_path` uses under the hood (see [Single-sample inference](#single-sample-inference)). SAM3 needs a newer `transformers` than the one pinned in `environment.yml` for IllumiCraft's own modeling code, so run it in a separate conda env (`python -m pip install "transformers>=..." matanyone`, per SAM3/MatAnyone's own install instructions), then point `--fgprep_python` at that env's interpreter.
-> 
+We provide `utils/generate_foreground_video_example.py` as a reference script for generating foreground videos from an RGB video and its corresponding mask video, where foreground pixels are `(255, 255, 255)` and background pixels are `(0, 0, 0)`.
+
+> **Note:** `foreground_video_example.py` is provided only as a reference code snippet for generating foreground videos from an RGB video and its corresponding mask video.
+
+Alternatively, `utils/prepare_foreground_video.py` automates this end-to-end with [SAM3](https://github.com/facebookresearch/sam3) (text-prompted segmentation of the first frame) + [MatAnyone](https://github.com/pq-yang/MatAnyone) (video matting) — this is what `--input_video_path` uses under the hood (see [Single-sample inference](#single-sample-inference)).
+
+SAM3 needs a `transformers` release that ships `Sam3Model`/`Sam3Processor` (we use `5.14.1`) — much newer than the `4.51.2` pinned in `environment.yml` for IllumiCraft's own modeling code — so it runs in its own conda env, created the same way as the main `illumicraft` env:
+
+```bash
+conda create -n fgprep python=3.10 -y
+conda activate fgprep
+pip install torch==2.7.1+cu118 torchvision==0.22.1+cu118 torchaudio==2.7.1+cu118 --index-url https://download.pytorch.org/whl/cu118
+pip install transformers accelerate opencv-python decord huggingface_hub
+pip install --no-deps -e 'git+https://github.com/pq-yang/MatAnyone#egg=matanyone'
+```
+
+`matanyone` isn't published on PyPI, so it's installed straight from its git repo (its own model weights download automatically on first use). Download the SAM3 checkpoint into `checkpoints/sam3` (`facebook/sam3` on Hugging Face — access may need to be requested).
+
+`--fgprep_python` auto-detects the `fgprep` env under your active conda installation (`$(conda info --base)/envs/fgprep/bin/python`); pass `--fgprep_python /path/to/python` explicitly (or set `FGPREP_PYTHON`) if your conda envs live somewhere non-standard (e.g. envs created with `conda create --prefix`).
+
 ## 🎬 Sample Results
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/aeb594c5-c32b-4ffa-bcda-0723e7612187" />
 

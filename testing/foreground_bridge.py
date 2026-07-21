@@ -13,7 +13,27 @@ from pathlib import Path
 TESTING_DIR = Path(__file__).resolve().parent
 REPO_ROOT = TESTING_DIR.parent
 
-DEFAULT_FGPREP_PYTHON = str(REPO_ROOT.parent / "conda_envs" / "fgprep" / "bin" / "python")
+
+def _default_fgprep_python():
+    """Best-effort path to the `fgprep` conda env's interpreter.
+
+    Assumes `fgprep` was created the same way as `illumicraft` -- a named env
+    (`conda create -n fgprep ...`, see README) under the same conda
+    installation -- i.e. `$(conda info --base)/envs/fgprep/bin/python`.
+    Returns None if it can't be resolved or doesn't exist, so callers with a
+    non-standard layout (e.g. `conda create --prefix`) are forced to pass
+    --fgprep_python / FGPREP_PYTHON explicitly instead of silently getting a
+    wrong path.
+    """
+    conda_exe = os.environ.get("CONDA_EXE")
+    if not conda_exe:
+        return None
+    conda_base = Path(conda_exe).resolve().parent.parent
+    candidate = conda_base / "envs" / "fgprep" / "bin" / "python"
+    return str(candidate) if candidate.exists() else None
+
+
+DEFAULT_FGPREP_PYTHON = _default_fgprep_python()
 DEFAULT_FGPREP_SCRIPT = str(REPO_ROOT / "utils" / "prepare_foreground_video.py")
 
 
@@ -49,8 +69,15 @@ def ensure_foreground_video(
             "via SAM3 + MatAnyone when only --input_video_path is given."
         )
 
-    fgprep_python = fgprep_python or os.environ.get("FGPREP_PYTHON", DEFAULT_FGPREP_PYTHON)
+    fgprep_python = fgprep_python or os.environ.get("FGPREP_PYTHON") or DEFAULT_FGPREP_PYTHON
     fgprep_script = fgprep_script or os.environ.get("FGPREP_SCRIPT", DEFAULT_FGPREP_SCRIPT)
+
+    if not fgprep_python:
+        raise ValueError(
+            "Could not locate the `fgprep` conda env's interpreter. Pass --fgprep_python "
+            "explicitly, set FGPREP_PYTHON, or create the env as `conda create -n fgprep ...` "
+            "(see README's Foreground Video Preparation section)."
+        )
 
     cache_dir = Path(output_dir) / "generated_foreground_videos"
     cache_dir.mkdir(parents=True, exist_ok=True)
