@@ -44,6 +44,7 @@ from models.illumicraft import (
 
 
 from training.utils import save_side_by_side_video, save_side_by_side_foreground_generated_video
+from foreground_bridge import ensure_foreground_video
 
 def filter_kwargs(cls, kwargs):
     import inspect
@@ -146,6 +147,23 @@ def generate_video(
         height=args.height,
     )
 
+    # For the review concat video: show the raw input video (instead of the
+    # matted foreground video) when the foreground video was auto-generated
+    # from it. `foreground_frames` itself is untouched and still used as the
+    # actual model conditioning input below.
+    display_frames = foreground_frames
+    if getattr(args, "used_auto_generation", False) and args.input_video_path:
+        display_frames = prepare_frames(
+            args.input_video_path,
+            args.height_buckets,
+            args.width_buckets,
+            args.frame_buckets,
+            image_transforms,
+            num_frames=args.frame_buckets[0],
+            width=args.width,
+            height=args.height,
+        )
+
     hdr_maps = None
     tracking_maps = None
     ref_image = None
@@ -177,6 +195,9 @@ def generate_video(
     with torch.no_grad():
         foreground_frames = foreground_frames.unsqueeze(0).to(device=device, dtype=dtype)
         foreground_frames = foreground_frames.permute(0, 2, 1, 3, 4)  # [B,C,F,H,W]
+
+        display_frames = display_frames.unsqueeze(0).to(device=device, dtype=dtype)
+        display_frames = display_frames.permute(0, 2, 1, 3, 4)
 
         if hdr_maps is not None:
             hdr_maps = hdr_maps.unsqueeze(0).to(device=device, dtype=dtype)
@@ -241,7 +262,7 @@ def generate_video(
         export_to_video(generated_video_bg, str(bg_path), fps=fps)
 
         save_side_by_side_video(
-            foreground_frames,
+            display_frames,
             ref_image,
             generated_video_bg,
             str(bg_path).replace(".mp4", "_concat.mp4"),
@@ -271,11 +292,52 @@ def generate_video(
         export_to_video(generated_video_nobg, str(nobg_path), fps=fps)
 
         save_side_by_side_foreground_generated_video(
-            foreground_frames,
+            display_frames,
             generated_video_nobg,
             str(nobg_path).replace(".mp4", "_concat.mp4"),
             fps=fps,
         )
+
+
+IMAGE_EXTS = (".jpg", ".jpeg", ".png", ".webp")
+
+
+def save_review_bundle(args, output_root):
+    """Copy the input video, background image, and foreground video used for this run
+    into output_root/ alongside a prompts.txt, so the whole run can be reviewed together.
+
+    Videos are re-encoded to H.264/yuv420p (source clips and cv2.VideoWriter outputs may be
+    MPEG-4 Part 2, which browsers/VS Code can't decode) rather than copied byte-for-byte.
+    """
+    import shutil
+    import subprocess
+
+    import imageio_ffmpeg
+
+    output_root = Path(output_root)
+    ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
+
+    def copy_media(src, dst_stem):
+        src = Path(src)
+        if src.suffix.lower() in IMAGE_EXTS:
+            shutil.copy2(src, output_root / f"{dst_stem}{src.suffix}")
+        else:
+            subprocess.run(
+                [ffmpeg_exe, "-y", "-i", str(src), "-c:v", "libx264", "-pix_fmt", "yuv420p",
+                 str(output_root / f"{dst_stem}.mp4")],
+                check=True, capture_output=True,
+            )
+
+    copy_media(args.foreground_video_path, "foreground_video")
+
+    if args.input_video_path:
+        copy_media(args.input_video_path, "input_video")
+
+    if args.background_path:
+        copy_media(args.background_path, "background")
+
+    with open(output_root / "prompts.txt", "w") as f:
+        f.write(f"{args.foreground_prompt};{args.lighting_prompt or ''}\n")
 
 
 def main():
@@ -284,15 +346,29 @@ def main():
     parser.add_argument(
         "--foreground_video_path",
         type=str,
-        required=True,
-        help="Path to the foreground video (or image).",
+        default=None,
+        help="Path to an already-prepared foreground video (or image). If omitted, "
+        "--input_video_path is used to auto-generate one via SAM3 + MatAnyone.",
+    )
+    parser.add_argument(
+        "--input_video_path",
+        type=str,
+        default=None,
+        help="Raw input video with a real background. Used to auto-generate the "
+        "foreground video when --foreground_video_path is not provided.",
     )
     parser.add_argument(
         "--foreground_prompt",
         type=str,
         required=True,
-        help="Foreground prompt text.",
+        help="Foreground prompt text. Also used as the SAM3 text prompt when "
+        "auto-generating the foreground video from --input_video_path.",
     )
+    parser.add_argument("--fgprep_python", type=str, default=None, help="Python interpreter of the fgprep conda env (SAM3 + MatAnyone).")
+    parser.add_argument("--fgprep_script", type=str, default=None, help="Path to utils/prepare_foreground_video.py.")
+    parser.add_argument("--sam3_model_path", type=str, default=None, help="Path/repo id of the SAM3 checkpoint (fgprep env).")
+    parser.add_argument("--matanyone_model", type=str, default=None, help="MatAnyone model repo id (fgprep env).")
+    parser.add_argument("--fgprep_score_threshold", type=float, default=0.4, help="SAM3 detection score threshold.")
     parser.add_argument(
         "--lighting_prompt",
         type=str,
@@ -362,8 +438,27 @@ def main():
         model_root = args.pretrained_model_name_or_path
     else:
         model_root = args.model_path
-        
+
     os.makedirs(args.output_path, exist_ok=True)
+
+    # Track whether the foreground video is about to be auto-generated from
+    # --input_video_path (as opposed to an already-prepared --foreground_video_path),
+    # so the review concat video can show the raw input video in that case.
+    args.used_auto_generation = bool(args.input_video_path) and not (
+        args.foreground_video_path and os.path.exists(args.foreground_video_path)
+    )
+
+    args.foreground_video_path = ensure_foreground_video(
+        input_video_path=args.input_video_path,
+        foreground_video_path=args.foreground_video_path,
+        foreground_prompt=args.foreground_prompt,
+        output_dir=args.output_path,
+        fgprep_python=args.fgprep_python,
+        fgprep_script=args.fgprep_script,
+        sam3_model_path=args.sam3_model_path,
+        matanyone_model=args.matanyone_model,
+        score_threshold=args.fgprep_score_threshold,
+    )
 
     tokenizer = AutoTokenizer.from_pretrained(
         os.path.join(
@@ -438,6 +533,8 @@ def main():
         fps=24,
         seed=args.seed,
     )
+
+    save_review_bundle(args, args.output_path)
 
 
 if __name__ == "__main__":

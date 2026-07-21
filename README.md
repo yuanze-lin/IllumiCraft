@@ -174,6 +174,16 @@ python testing/inference_single_sample.py \
     ${BACKGROUND_PATH:+--background_path "$BACKGROUND_PATH"}
 ```
 
+#### Auto-generating the foreground video from a raw input video
+
+If you don't already have a prepared (gray-background) foreground video, pass a raw input video via `--input_video_path` instead of `--foreground_video_path`. The foreground video is then extracted automatically with SAM3 (text-prompted segmentation on the first frame, using `--foreground_prompt` as the text prompt) + MatAnyone (video matting), and composited onto the same fixed gray background used elsewhere in the pipeline. This runs in a separate conda env (SAM3 + MatAnyone need a newer `transformers` than the one IllumiCraft itself pins), reached via `--fgprep_python`/`--fgprep_script` (see `inference_single_sample_from_video.sh`, which defaults these to a sibling `../conda_envs/fgprep` env):
+
+```bash
+bash inference_single_sample_from_video.sh
+```
+
+This example config auto-generates its foreground video from `demo/eval/00000.mp4` (with `demo/eval/custom_background.jpg` as the background image) — the same raw clip used elsewhere in `demo/eval/`.
+
 #### Outputs
 
 When a background image and lighting prompt are provided, IllumiCraft generates background-conditioned results:
@@ -181,6 +191,7 @@ When a background image and lighting prompt are provided, IllumiCraft generates 
 ```text
 sample_bg.mp4
 sample_bg_concat.mp4       # foreground video | background | generated video
+                           # (input video instead of foreground video, if it was used to auto-generate one)
 ```
 
 For comparison, it also generates results without background conditioning:
@@ -188,6 +199,7 @@ For comparison, it also generates results without background conditioning:
 ```text
 sample_nobg.mp4
 sample_nobg_concat.mp4     # foreground video | generated video
+                           # (input video instead of foreground video, if it was used to auto-generate one)
 ```
 
 ## 🖥️ Gradio Demo
@@ -220,6 +232,8 @@ The demo includes preloaded examples from `demo/eval/`, which can be used direct
 We provide `utils/generate_foreground_video_example.py` as a reference script for generating foreground videos from an RGB video and its corresponding mask video, where foreground pixels are `(255, 255, 255)` and background pixels are `(0, 0, 0)`.
 
 > **Note:** `foreground_video_example.py` is provided only as a reference code snippet for generating foreground videos from an RGB video and its corresponding mask video.
+
+Alternatively, `utils/prepare_foreground_video.py` automates this end-to-end with SAM3 (text-prompted segmentation of the first frame) + [MatAnyone](https://github.com/pq-yang/MatAnyone) (video matting) — this is what `--input_video_path` uses under the hood (see [Single-sample inference](#single-sample-inference)). SAM3 needs a newer `transformers` than the one pinned in `environment.yml` for IllumiCraft's own modeling code, so run it in a separate conda env (`python -m pip install "transformers>=..." matanyone`, per SAM3/MatAnyone's own install instructions), then point `--fgprep_python` at that env's interpreter.
 > 
 ## 🎬 Sample Results
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/aeb594c5-c32b-4ffa-bcda-0723e7612187" />

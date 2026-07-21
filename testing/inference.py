@@ -44,6 +44,7 @@ from models.illumicraft import (
 )
 
 from training.utils import save_side_by_side_video, save_side_by_side_foreground_generated_video
+from foreground_bridge import ensure_foreground_video
 
 
 def filter_kwargs(cls, kwargs):
@@ -185,7 +186,24 @@ def generate_video(
     pipe.transformer.gradient_checkpointing = False
 
     prompts = file_lines_to_list(os.path.join(args.data_root, args.caption_column))
-    foreground_videos = file_lines_to_list(os.path.join(args.data_root, args.foreground_column))
+
+    foreground_column_path = os.path.join(args.data_root, args.foreground_column)
+    input_video_column_path = (
+        os.path.join(args.data_root, args.input_video_column) if args.input_video_column else None
+    )
+    input_videos = (
+        file_lines_to_list(input_video_column_path)
+        if input_video_column_path and os.path.exists(input_video_column_path)
+        else None
+    )
+
+    if os.path.exists(foreground_column_path):
+        foreground_videos = file_lines_to_list(foreground_column_path)
+    elif input_videos is not None:
+        # No prepared foreground videos at all -- every sample will be auto-generated below.
+        foreground_videos = [""] * len(input_videos)
+    else:
+        foreground_videos = file_lines_to_list(foreground_column_path)  # raises FileNotFoundError
 
     output_root = Path(args.output_path)
     output_root.mkdir(parents=True, exist_ok=True)
@@ -221,9 +239,36 @@ def generate_video(
 
     foreground_list = []
     for i in tqdm(range(len(foreground_videos))):
-        print("Processing video index: "  + str(i) + ", | Video name: " + str(foreground_videos[i]) + "| Processed number: " + str(len(foreground_list)))
+        foreground_entry = foreground_videos[i]
+        print("Processing video index: "  + str(i) + ", | Video name: " + str(foreground_entry or (input_videos[i] if input_videos else "")) + "| Processed number: " + str(len(foreground_list)))
 
-        foreground_map_path = Path(os.path.join(args.data_root, foreground_videos[i]))
+        foreground_map_path = (
+            Path(os.path.join(args.data_root, foreground_entry)) if foreground_entry else None
+        )
+        used_auto_generation = False
+        row_input_video_path = None
+        if foreground_map_path is None or not foreground_map_path.exists():
+            if input_videos is None:
+                raise FileNotFoundError(
+                    f"No foreground video for index {i} (row {foreground_entry!r}) and no "
+                    "--input_video_column given to auto-generate one."
+                )
+            row_input_video_path = os.path.join(args.data_root, input_videos[i])
+            base_prompt = prompts[i].split(".")[0].strip()
+            generated_path = ensure_foreground_video(
+                input_video_path=row_input_video_path,
+                foreground_video_path=None,
+                foreground_prompt=base_prompt,
+                output_dir=os.path.join(args.data_root, "generated_foreground_videos"),
+                fgprep_python=args.fgprep_python,
+                fgprep_script=args.fgprep_script,
+                sam3_model_path=args.sam3_model_path,
+                matanyone_model=args.matanyone_model,
+                score_threshold=args.fgprep_score_threshold,
+            )
+            foreground_map_path = Path(generated_path)
+            used_auto_generation = True
+
         foreground_frames = prepare_frames(
             foreground_map_path,
             args.height_buckets,
@@ -234,6 +279,23 @@ def generate_video(
             width=args.width,
             height=args.height,
         )
+
+        # For the review concat video: show the raw input video (instead of the
+        # matted foreground video) when this row's foreground video was
+        # auto-generated from it. `foreground_frames` itself is untouched and
+        # still used as the actual model conditioning input below.
+        display_frames = foreground_frames
+        if used_auto_generation and row_input_video_path:
+            display_frames = prepare_frames(
+                row_input_video_path,
+                args.height_buckets,
+                args.width_buckets,
+                args.frame_buckets,
+                image_transforms,
+                num_frames=args.frame_buckets[0],
+                width=args.width,
+                height=args.height,
+            )
 
         hdr_maps = None
         tracking_maps = None
@@ -262,6 +324,9 @@ def generate_video(
         with torch.no_grad():
             foreground_frames = foreground_frames.unsqueeze(0).to(device=device, dtype=dtype)
             foreground_frames = foreground_frames.permute(0, 2, 1, 3, 4)
+
+            display_frames = display_frames.unsqueeze(0).to(device=device, dtype=dtype)
+            display_frames = display_frames.permute(0, 2, 1, 3, 4)
 
             if args.hdr_column is not None and hdr_maps is not None:
                 hdr_maps = hdr_maps.unsqueeze(0).to(device=device, dtype=dtype)
@@ -317,7 +382,7 @@ def generate_video(
 
             bg_video_output_path = os.path.join(
                 output_root.as_posix(),
-                Path(foreground_videos[i]).stem + "_bg.mp4",
+                foreground_map_path.stem + "_bg.mp4",
             )
             print("[BG]", bg_video_output_path)
             print("[BG prompt]", bg_pipeline_args["prompt"])
@@ -331,7 +396,7 @@ def generate_video(
 
             bg_concat_path = bg_video_output_path.replace(".mp4", "_concat.mp4")
             save_side_by_side_video(
-                foreground_frames=foreground_frames[0].permute(1, 2, 3, 0),  # [F, H, W, C]
+                foreground_frames=display_frames[0].permute(1, 2, 3, 0),  # [F, H, W, C]
                 background_image=ref_image,
                 generated_video=generated_video_bg,
                 output_path=bg_concat_path,
@@ -351,7 +416,7 @@ def generate_video(
 
         nobg_video_output_path = os.path.join(
             output_root.as_posix(),
-            Path(foreground_videos[i]).stem + "_nobg.mp4",
+            foreground_map_path.stem + "_nobg.mp4",
         )
         print("[NoBG]", nobg_video_output_path)
         print("[NoBG prompt]", nobg_pipeline_args["prompt"])
@@ -365,7 +430,7 @@ def generate_video(
 
         nobg_concat_path = nobg_video_output_path.replace(".mp4", "_concat.mp4")
         save_side_by_side_foreground_generated_video(
-            foreground_frames=foreground_frames,
+            foreground_frames=display_frames,
             generated_video=generated_video_nobg,
             output_path=nobg_concat_path,
             fps=fps,
@@ -382,6 +447,20 @@ def main():
         default="video",
         help="The column of the dataset containing foreground videos.",
     )
+    parser.add_argument(
+        "--input_video_column",
+        type=str,
+        default=None,
+        help="Optional column of raw input videos (real background), parallel to "
+        "--foreground_column. For any row whose foreground_column entry is missing or "
+        "does not resolve to an existing file, the foreground video is auto-generated "
+        "from the corresponding input video via SAM3 + MatAnyone.",
+    )
+    parser.add_argument("--fgprep_python", type=str, default=None, help="Python interpreter of the fgprep conda env (SAM3 + MatAnyone).")
+    parser.add_argument("--fgprep_script", type=str, default=None, help="Path to utils/prepare_foreground_video.py.")
+    parser.add_argument("--sam3_model_path", type=str, default=None, help="Path/repo id of the SAM3 checkpoint (fgprep env).")
+    parser.add_argument("--matanyone_model", type=str, default=None, help="MatAnyone model repo id (fgprep env).")
+    parser.add_argument("--fgprep_score_threshold", type=float, default=0.4, help="SAM3 detection score threshold.")
     parser.add_argument(
         "--tracking_column",
         type=str,

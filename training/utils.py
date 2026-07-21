@@ -9,6 +9,7 @@ from typing import Optional, Tuple, Union
 
 import cv2
 import diffusers
+import imageio
 import numpy as np
 import torch
 from accelerate import DistributedType, init_empty_weights
@@ -305,14 +306,10 @@ def save_side_by_side_video(
     bg = _resize_frames_to_match(bg, h, w)
     out = _resize_frames_to_match(out, h, w)
 
-    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-    writer = cv2.VideoWriter(output_path, fourcc, fps, (w * 3, h))
-
+    writer = imageio.get_writer(output_path, fps=fps, codec="libx264", pixelformat="yuv420p", macro_block_size=None)
     for f, b, o in zip(fg, bg, out):
-        concat = np.concatenate([f, b, o], axis=1)  # horizontal concat
-        writer.write(cv2.cvtColor(concat, cv2.COLOR_RGB2BGR))
-
-    writer.release()
+        writer.append_data(np.concatenate([f, b, o], axis=1))  # horizontal concat
+    writer.close()
 
 def save_side_by_side_foreground_generated_video(
     foreground_frames,
@@ -337,13 +334,12 @@ def save_side_by_side_foreground_generated_video(
 
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
 
-    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-    writer = cv2.VideoWriter(output_path, fourcc, fps, (w * 2, h))
+    writer = imageio.get_writer(output_path, fps=fps, codec="libx264", pixelformat="yuv420p", macro_block_size=None)
 
     for f, o in zip(fg, out):
-        writer.write(cv2.cvtColor(np.concatenate([f, o], axis=1), cv2.COLOR_RGB2BGR))
+        writer.append_data(np.concatenate([f, o], axis=1))
 
-    writer.release()
+    writer.close()
 
 def move_model(model, device, dtype):
     """Move a model to the target device, handling meta-initialized modules safely."""

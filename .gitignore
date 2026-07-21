@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+
+# Model weights / checkpoints (large, not meant to be pushed)
+checkpoints/
+
+# Downloaded datasets
+dataset/
+
+# Local inference output bundles
+demo/single_sample_from_video_outputs/
+demo/single_sample_outputs/
+
+# Vestigial nested clone -- the real matanyone install used by this repo is a
+# separate pip install into the `fgprep` conda env, not this directory.
+third_party/
