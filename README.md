@@ -229,11 +229,7 @@ The demo includes preloaded examples from `demo/eval/`, which can be used direct
 
 ## 🎭 Foreground Video Preparation
 
-We provide `utils/generate_foreground_video_example.py` as a reference script for generating foreground videos from an RGB video and its corresponding mask video, where foreground pixels are `(255, 255, 255)` and background pixels are `(0, 0, 0)`.
-
-> **Note:** `foreground_video_example.py` is provided only as a reference code snippet for generating foreground videos from an RGB video and its corresponding mask video.
-
-Alternatively, `utils/prepare_foreground_video.py` automates this end-to-end with SAM3 (text-prompted segmentation of the first frame) + [MatAnyone](https://github.com/pq-yang/MatAnyone) (video matting) — this is what `--input_video_path` uses under the hood (see [Single-sample inference](#single-sample-inference)). SAM3 needs a newer `transformers` than the one pinned in `environment.yml` for IllumiCraft's own modeling code, so run it in a separate conda env (`python -m pip install "transformers>=..." matanyone`, per SAM3/MatAnyone's own install instructions), then point `--fgprep_python` at that env's interpreter.
+We provide `utils/prepare_foreground_video.py` automates this end-to-end with SAM3 (text-prompted segmentation of the first frame) + [MatAnyone](https://github.com/pq-yang/MatAnyone) (video matting) — this is what `--input_video_path` uses under the hood (see [Single-sample inference](#single-sample-inference)). SAM3 needs a newer `transformers` than the one pinned in `environment.yml` for IllumiCraft's own modeling code, so run it in a separate conda env (`python -m pip install "transformers>=..." matanyone`, per SAM3/MatAnyone's own install instructions), then point `--fgprep_python` at that env's interpreter.
 > 
 ## 🎬 Sample Results
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/aeb594c5-c32b-4ffa-bcda-0723e7612187" />
