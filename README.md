@@ -124,6 +124,8 @@ bash train.sh
 
 IllumiCraft supports both **dataset-style inference** and **single-sample inference**.
 
+Both accept either an already-prepared gray-background foreground video or a raw RGB video that is converted into one on the fly — via [SAM3](https://github.com/facebookresearch/sam3) (text-prompted segmentation of the first frame) + [MatAnyone](https://github.com/pq-yang/MatAnyone) (video matting), composited onto a fixed gray background (implemented in `utils/prepare_foreground_video.py`). To use the raw-video path, first download the SAM3 checkpoint into `checkpoints/sam3` (`facebook/sam3` on Hugging Face — access may need to be requested); MatAnyone's weights download automatically on first use. To build a foreground video manually from an existing RGB + mask video pair instead, see the reference snippet `utils/generate_foreground_video_example.py` (foreground pixels `(255, 255, 255)`, background pixels `(0, 0, 0)`).
+
 ### Dataset-style inference
 
 Run video generation using a trained IllumiCraft checkpoint.
@@ -143,7 +145,7 @@ bash inference.sh
 
 #### Inference directly from raw input videos (dataset-style)
 
-To skip preparing foreground videos yourself, add `--input_video_column` (a txt file of raw input video paths, parallel to `--foreground_column`). For any row whose `--foreground_column` entry is missing or doesn't resolve to an existing file, the foreground video is auto-generated from the corresponding raw input video via SAM3 + MatAnyone (see [Foreground Video Preparation](#-foreground-video-preparation) for the SAM3 checkpoint setup) and cached under `<DATA_ROOT>/generated_foreground_videos/`:
+To skip preparing foreground videos yourself, add `--input_video_column` (a txt file of raw input video paths, parallel to `--foreground_column`). For any row whose `--foreground_column` entry is missing or doesn't resolve to an existing file, the foreground video is auto-generated from the corresponding raw input video via SAM3 + MatAnyone and cached under `<DATA_ROOT>/generated_foreground_videos/`:
 
 ```bash
 python testing/inference.py \
@@ -195,7 +197,7 @@ python testing/inference_single_sample.py \
 
 #### Inference directly from a raw input video
 
-If you don't already have a prepared (gray-background) foreground video, pass a raw input video via `--input_video_path` instead of `--foreground_video_path`. The foreground video is then extracted automatically with SAM3 (text-prompted segmentation on the first frame, using `--foreground_prompt` as the text prompt) + MatAnyone (video matting), and composited onto the same fixed gray background used elsewhere in the pipeline (see [Foreground Video Preparation](#-foreground-video-preparation) for the SAM3 checkpoint setup):
+If you don't already have a prepared (gray-background) foreground video, pass a raw input video via `--input_video_path` instead of `--foreground_video_path`. The foreground video is then extracted automatically with SAM3 (text-prompted segmentation on the first frame, using `--foreground_prompt` as the text prompt) + MatAnyone (video matting), and composited onto the same fixed gray background used elsewhere in the pipeline:
 
 ```bash
 bash inference_single_sample_from_original_video.sh
@@ -273,12 +275,6 @@ The demo includes preloaded examples from `demo/eval/`, which can be used direct
 <p align="center">
   <img src="assets/gradio.png" alt="Gradio Demo" width="100%">
 </p>
-
-## 🎭 Foreground Video Preparation
-
-`utils/prepare_foreground_video.py` generates a gray-background foreground video from a raw RGB video, using [SAM3](https://github.com/facebookresearch/sam3) (text-prompted segmentation of the first frame) + [MatAnyone](https://github.com/pq-yang/MatAnyone) (video matting) — this is what `--input_video_path` uses under the hood (see [Single-sample inference](#single-sample-inference)). For manual construction from an existing RGB + mask video pair instead, see the reference snippet `utils/generate_foreground_video_example.py` (foreground pixels `(255, 255, 255)`, background pixels `(0, 0, 0)`).
-
-Both SAM3 and MatAnyone run in the main `illumicraft` env (the `matanyone` install and the required `transformers` are already covered by [Installation](#-installation)). Just download the SAM3 checkpoint into `checkpoints/sam3` (`facebook/sam3` on Hugging Face — access may need to be requested); MatAnyone's weights download automatically on first use.
 
 ## 🎬 Sample Results
 <img width="600" align="left" alt="image" src="https://github.com/user-attachments/assets/aeb594c5-c32b-4ffa-bcda-0723e7612187" />
