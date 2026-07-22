@@ -270,7 +270,7 @@ Then launch:
 bash run_gradio_demo.sh
 ```
 
-The demo includes preloaded examples from `demo/eval/`, which can be used directly or freely replaced with your own inputs. The IllumiCraft Gradio interface for video relighting is shown below:
+The demo runs the full pipeline end-to-end: upload a **raw input video**, click **Generate foreground video** to auto-extract the gray-background foreground (SAM3 + MatAnyone, see [Foreground extraction](#-inference)), then click **Generate relit video** to relight it with your foreground/lighting prompts and an optional background image. Preloaded examples from `demo/eval/` can be used directly or freely replaced with your own inputs. The IllumiCraft Gradio interface for video relighting is shown below:
 
 <p align="center">
   <img src="assets/gradio.png" alt="Gradio Demo" width="100%">

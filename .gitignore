@@ -11,6 +11,10 @@ dataset/
 demo/single_sample_from_video_outputs/
 demo/single_sample_outputs/
 
+# Gradio demo runtime artifacts
+.gradio/
+gradio_outputs/
+
 # Vestigial nested clone -- the real matanyone install used by this repo is a
-# separate pip install into the `fgprep` conda env, not this directory.
+# separate pip install (see Installation), not this directory.
 third_party/

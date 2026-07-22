@@ -69,6 +69,35 @@ def patch_inference_module():
     infer.prepare_frames = prepare_frames_fixed
 
 
+def extract_foreground(
+    input_video,
+    foreground_prompt,
+    output_dir,
+    score_threshold=0.4,
+):
+    """Turn a raw input video into a gray-background foreground video.
+
+    Runs SAM3 (text-prompted first-frame segmentation) + MatAnyone (video
+    matting) in-process and returns the path to the generated foreground video.
+    """
+    from testing.foreground_bridge import ensure_foreground_video
+
+    input_video = normalize_upload(input_video)
+    if not input_video:
+        raise ValueError("Please upload a raw input video first.")
+    if not foreground_prompt or not foreground_prompt.strip():
+        raise ValueError("Foreground prompt is required to extract the foreground subject.")
+
+    run_dir = tempfile.mkdtemp(dir=output_dir, prefix="illumicraft_fg_")
+    return ensure_foreground_video(
+        input_video_path=input_video,
+        foreground_video_path=None,
+        foreground_prompt=foreground_prompt.strip(),
+        output_dir=run_dir,
+        score_threshold=score_threshold,
+    )
+
+
 def run_gradio_inference(
     pipe,
     wan_model_path,
@@ -94,7 +123,10 @@ def run_gradio_inference(
     background_image = normalize_upload(background_image)
 
     if not foreground_video:
-        raise ValueError("Foreground video is required.")
+        raise ValueError(
+            "No foreground video yet. Click \"Generate foreground video\" first "
+            "(or upload a prepared gray-background foreground video)."
+        )
     if not foreground_prompt or not foreground_prompt.strip():
         raise ValueError("Foreground prompt is required.")
 
